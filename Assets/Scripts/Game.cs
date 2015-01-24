@@ -10,24 +10,25 @@ public class Game
 
 		private static List<Guy> ChooseTargets (Guy shootingGuy, PriorityQueue otherGuys)
 		{
-			List<Guy> targets = new List<Guy> ();
-			for (int armIndex = 0; armIndex < ARMS_COUNT; armIndex++) {
-				if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
-						Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
-						targets.Add (targetGuy);
-						shootingGuy.AimAt (armIndex, targetGuy);
-				} else {
-						shootingGuy.AimAtNobody (armIndex);
+				List<Guy> targets = new List<Guy> ();
+				for (int armIndex = 0; armIndex < ARMS_COUNT; armIndex++) {
+						if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
+								Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
+								targets.Add (targetGuy);
+								shootingGuy.AimAt (armIndex, targetGuy);
+						} else {
+								shootingGuy.AimAtNobody (armIndex);
+						}
 				}
-			}
-			return targets;
+				return targets;
 		}
 
 		public static Guy FindPedro (List<Guy> guys)
 		{		
+
 				Dictionary<Guy, List<Guy>> allTargets = new Dictionary<Guy, List<Guy>> ();
 				List<Guy> nonPedroes = new List<Guy> (guys);
-				
+				GameState gameState = GameState.GetInstance ();
 				PrintList ("All", nonPedroes);
 	
 				int pedroIndex = (int)Mathf.Floor (Random.value * guys.Count);
@@ -50,6 +51,9 @@ public class Game
 				allTargets.Add (pedro, ChooseTargets (pedro, targetsQueue));
 				foreach (Guy nonPedro in shuffledNonPedroes) {
 						allTargets.Add (nonPedro, ChooseTargets (nonPedro, targetsQueue));
+						if (gameState.IsIntro ()) {
+								nonPedro.Speak ();
+						}
 				}
 				return pedro;
 		}
@@ -69,5 +73,7 @@ public class Game
 				}
 				Debug.Log (output);
 		}
+
+
 
 }
