@@ -38,6 +38,9 @@ public class Guy : MonoBehaviour
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
 		public GuyChoiceBalloon guyChoiceBalloon;
+
+		public GameObject andNowBalloon;
+		public GameObject tequilaBalloon;
 		
 		void Awake ()
 		{
@@ -76,13 +79,17 @@ public class Guy : MonoBehaviour
 								transitionTime = STARTING_TRANSITION_TIME;
 								transform.localPosition = SAVED_STARTING_POSITION + new Vector3 (SAVED_OFFSET * gameState.GetSavedGuysCount (), 0, 0);
 						}
-				}
-
-				if (phase.Equals (GuyPhase.Gone)) {
+				} else if (phase.Equals (GuyPhase.Gone)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						}
+				} else if(phase.Equals (GuyPhase.Victorious)) {
+					if((Mathf.Floor(Time.time * 5) % 2) == 0) {
+						spriteRenderer.sprite = savedFiestaSprite;
+					} else {
+						spriteRenderer.sprite = savedSprite;
+					}
 				}
 				
 				// DEBUG KEYS: RIMUOVILEEE
@@ -314,19 +321,19 @@ public class Guy : MonoBehaviour
 		IEnumerator ShowAndNowMessageCoroutine (Guy otherGuy, List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
-				Speak ("And now?");
+				andNowBalloon.SetActive (true);
 				otherGuy.ShowTequilaMessage (savedGuys);
 		}
 
 		public void ShowTequilaMessage (List<Guy> savedGuys)
 		{
-				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));				
+				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));
 		}
 
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
-				Speak ("Tequila!");
+				tequilaBalloon.SetActive (true);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
@@ -334,6 +341,6 @@ public class Guy : MonoBehaviour
 
 		public void ShowVictorious ()
 		{
-				spriteRenderer.sprite = savedFiestaSprite;
+			phase = GuyPhase.Victorious;
 		}
 }
