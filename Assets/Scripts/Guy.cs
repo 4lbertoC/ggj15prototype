@@ -14,6 +14,7 @@ public class Guy : MonoBehaviour
 		private GameState gameState = GameState.GetInstance ();
 		private List<Arm> arms = new List<Arm> ();
 		private bool dead = false;
+		private bool scared = false;
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
 		private bool isSaved = false;
@@ -25,6 +26,7 @@ public class Guy : MonoBehaviour
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
+		private const float AGONY_TIME = 0.1f;
 
 		void Awake ()
 		{
@@ -69,6 +71,18 @@ public class Guy : MonoBehaviour
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						}
 				}
+				
+				// DEBUG KEYS: RIMUOVILEEE
+				if (!gameState.IsPedro (this) && Input.GetKeyDown(KeyCode.Z)) {
+						if (GetId () == 0) {
+							Debug.Log (GetId ()  + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+						}
+						NonPedroShoot ();
+				}
+				
+	           	if (gameState.IsPedro (this) && Input.GetKeyDown(KeyCode.P)) {
+						Debug.Log (GetId ()  + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+	           	}
 		}
 
 		private void SpawnArmsIfNecessary ()
@@ -79,7 +93,7 @@ public class Guy : MonoBehaviour
 								arm.transform.parent = this.transform;						
 								// arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
 								arms.Add (arm.GetComponent<Arm> ());
-								Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " spawned");
+								// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " spawned");
 						}
 				}
 		}
@@ -91,7 +105,7 @@ public class Guy : MonoBehaviour
 				AimAtNobody (0);
 				AimAtNobody (1);
 				//				Destroy (this.gameObject);
-		}
+		}		
 		
 		void OnMouseDown ()
 		{
@@ -109,7 +123,7 @@ public class Guy : MonoBehaviour
 								transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 						} else {
 								Debug.Log ("Massacre - New game");
-								gameState.EndGame (false);
+								// gameState.EndGame (false);
 						}
 				}
 			
@@ -128,7 +142,8 @@ public class Guy : MonoBehaviour
 		}
 		
 		public void NonPedroShoot() {
-			
+				Debug.Log ("NON-PEDRO SHOOT!");
+				gameState.EndByShooting(this);
 		}
 		
 		private Arm GetArm (int armIndex)
@@ -197,46 +212,61 @@ public class Guy : MonoBehaviour
 				framesBeforeShuttingUp = -1;
 		}
 
-		public void ShootSlow ()
+		void BeScared ()
 		{
-				Shoot (5.0f);
+			scared = true;
+			for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+				AimAtNobody(armIndex);
+			}
+			StartCoroutine(ScreamOhNoCoroutine());
 		}
 		
-		public void ShootFast ()
-		{
-				Shoot (40.0f);
+		IEnumerator ScreamOhNoCoroutine() {
+			yield return new WaitForSeconds (0.5f);	
+			Speak ("Oh...");
+			yield return new WaitForSeconds (1.0f);	
+			Speak ("Nooo!");
 		}
-	
-		public void Shoot (float bulletSpeed)
+		
+		public void ShootButRememberThatGuyIsSpecial (Guy specialGuy)
 		{
 			foreach (Arm arm in arms) {
-				arm.Shoot(bulletSpeed);
+			    if (arm.target != null) {
+					if (arm.target == specialGuy) {
+						arm.Shoot (2.0f, null);				
+						specialGuy.BeScared();
+					} else {
+						arm.Shoot (15.0f, specialGuy);
+					}
+				}
 			}
-			StartCoroutine(IncompleteMassacreCoroutine());
 		}
 		
 		IEnumerator IncompleteMassacreCoroutine () {
-			yield return new WaitForSeconds(8.0f);
+			yield return new WaitForSeconds(AGONY_TIME * 2);
 			Debug.Log ("Check if coup de grace is needed");
 			Game.LossSequenceCoupDeGrace();
 		}
 
 		IEnumerator DeathCoroutine ()
 		{
-				yield return new WaitForSeconds (0.1f);
+				yield return new WaitForSeconds (AGONY_TIME);
 				gameObject.GetComponentInChildren<Body> ().Hide ();
 				foreach (Arm arm in arms) {
 						arm.Hide ();
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
 				dead = true;
+				if (scared) {
+					Game.LossSequenceCoupDeGrace();
+				}
 		}
 	
-		public void Die ()
+		public void Die (Guy specialGuy)
 		{
 			if (IsAlive()) {			
 				StartCoroutine(DeathCoroutine());			
-				ShootFast();
+				ShootButRememberThatGuyIsSpecial(specialGuy);
 			}
 		}
 		

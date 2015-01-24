@@ -58,8 +58,8 @@ public class Game
 				return pedro;
 		}
 		
-		public static void LossSequence(Guy pedro, List<Guy> nonPedroes) {
-				pedro.ShootSlow();
+		public static void ShootingSpree(Guy protagonist, Guy shooter) {
+				shooter.ShootButRememberThatGuyIsSpecial (protagonist);
 		}
 		
 		public static void LossSequenceCoupDeGrace() {
@@ -69,7 +69,7 @@ public class Game
 					if (survivors.Count > 1) {
 						Debug.Log ("Coup de grace needed, " + survivors.Count + " survivors.");
 						foreach (Guy guy in survivors) {
-							guy.ShootFast();
+							guy.ShootButRememberThatGuyIsSpecial(null);
 						}
 					} else {
 						Debug.Log ("Coup de grace not needed, one survivor.");
