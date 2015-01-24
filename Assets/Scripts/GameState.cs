@@ -7,6 +7,9 @@ public class GameState
 		public delegate void RemoveGuyAction();
 		public event RemoveGuyAction OnRemoveGuy;
 
+		public delegate void VictoryAction ();
+		public event VictoryAction OnVictory;
+
 		private List<Guy> currentGuys = new List<Guy> ();
 		private Guy currentPedro;
 		private static GameState _instance;
@@ -63,6 +66,16 @@ public class GameState
 					}
 					Game.ShootingSpree(shooter, shooter);
 				}
+		}
+	
+		public void EndGame (bool victory)
+		{
+			phase = GamePhase.Outro;
+			if (victory) {
+				Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
+			} else {
+				Debug.LogError ("MA CHE CAZZ...?!");
+			}
 		}
 		
 		public void EndByRunning (Guy runner)

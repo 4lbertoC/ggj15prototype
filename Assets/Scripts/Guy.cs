@@ -1,9 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Guy : MonoBehaviour
 {
+		public enum GuyPhase
+		{
+				Ready,
+				Saved,
+				Gone,
+				AndNow,
+				Tequila,
+				Victorious
+		}
 
 		public GameObject armPrefab;
 		public GameObject balloonPrefab;
@@ -17,9 +26,7 @@ public class Guy : MonoBehaviour
 		private bool scared = false;
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
-		private bool isSaved = false;
 		private float transitionTime = 0;
-		private bool isGone = false;
 		private List<string> sentences = new List<string> ();
 		private readonly Vector3 HIDDEN_SCALE = new Vector3 (0, 1, 0);
 		private readonly Vector3 VISIBLE_SCALE = new Vector3 (1, 1, 1);
@@ -27,7 +34,10 @@ public class Guy : MonoBehaviour
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
 		private const float AGONY_TIME = 0.1f;
-
+		private GuyPhase phase = GuyPhase.Ready;
+		private SpriteRenderer spriteRenderer;
+		public GuyChoiceBalloon guyChoiceBalloon;
+		
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
@@ -37,6 +47,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("2");
 				sentences.Add ("");
 				Debug.Log ("Guy #" + guyId + " was awaken");
+				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}
 
 		// Use this for initialization
@@ -53,19 +64,19 @@ public class Guy : MonoBehaviour
 						ShutUp ();
 				}
 
-				if (isSaved && !isGone) {
+				if (phase.Equals (GuyPhase.Saved)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, HIDDEN_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						} else {
-								isGone = true;
-								GetComponentInChildren<SpriteRenderer> ().sprite = savedSprite;
+								phase = GuyPhase.Gone;
+								spriteRenderer.sprite = savedSprite;
 								transitionTime = STARTING_TRANSITION_TIME;
 								transform.localPosition = SAVED_STARTING_POSITION + new Vector3 (SAVED_OFFSET * gameState.GetSavedGuysCount (), 0, 0);
 						}
 				}
 
-				if (isGone) {
+				if (phase.Equals (GuyPhase.Gone)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
@@ -99,9 +110,9 @@ public class Guy : MonoBehaviour
 				}
 		}
 
-		private void RemoveFromScene ()
+		public void RemoveFromScene ()
 		{
-				isSaved = true;
+				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
 				AimAtNobody (1);
@@ -111,26 +122,16 @@ public class Guy : MonoBehaviour
 		void OnMouseDown ()
 		{
 				if (gameState.IsReady ()) {
-						bool isPedro = gameState.IsPedro (this);
-						Debug.Log ("Clicked " + guyId + (isPedro ? "- he's Pedro!" : ""));
-						if (isSaved) {
-								return;
-						}
-						if (isPedro) {
-								gameState.RemoveGuy (this);
-								ShutUp ();
-								RemoveFromScene ();
-								gameState.ResetGame ();
-								transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
-						} else {
-								Debug.Log ("Massacre - New game");
-								// gameState.EndGame (false);
+						guyChoiceBalloon.ShowChoice (this);
+						if (gameState.GetGuysCount () == 2) {
+								gameState.EndGame (true);
 						}
 				}
 			
 		}
 		
-		public void PedroRun() {
+		public void PedroRun ()
+		{
 		
 		}
 		
@@ -138,7 +139,8 @@ public class Guy : MonoBehaviour
 				gameState.EndByShooting(this);
 		}
 		
-		public void NonPedroRun() {
+		public void NonPedroRun ()
+		{
 			
 		}
 		
@@ -182,8 +184,7 @@ public class Guy : MonoBehaviour
 		}
 		
 		public void Speak (string sentence)
-		{
-			
+		{	
 				if (balloon == null) {
 						balloon = Instantiate (balloonPrefab, 
 								this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f), 
@@ -242,12 +243,6 @@ public class Guy : MonoBehaviour
 				}
 			}
 		}
-		
-		IEnumerator IncompleteMassacreCoroutine () {
-			yield return new WaitForSeconds(AGONY_TIME * 2);
-			Debug.Log ("Check if coup de grace is needed");
-			Game.LossSequenceCoupDeGrace();
-		}
 
 		IEnumerator DeathCoroutine ()
 		{
@@ -273,18 +268,54 @@ public class Guy : MonoBehaviour
 		
 		public void Raise ()
 		{
-			if (!IsAlive()) {
-				gameObject.GetComponentInChildren<Corpse>().Hide();
-				gameObject.GetComponentInChildren<Body>().Show();			
-				foreach (Arm arm in arms) {
-					arm.Show();
+				if (!IsAlive ()) {
+						gameObject.GetComponentInChildren<Corpse> ().Hide ();
+						gameObject.GetComponentInChildren<Body> ().Show ();			
+						foreach (Arm arm in arms) {
+								arm.Show ();
+						}
+						dead = false;
 				}
-				dead = false;
-			}
 		}
 
 		public bool IsAlive ()
 		{
-			return !dead;
+				return !dead;
+		}
+
+		public GuyPhase GetPhase ()
+		{
+				return phase;
+		}
+
+		public void ShowAndNowMessage (Guy otherGuy, List<Guy> savedGuys)
+		{
+				StartCoroutine (ShowAndNowMessageCoroutine (otherGuy, savedGuys));
+				Speak ("And now?");
+		}
+
+		IEnumerator ShowAndNowMessageCoroutine (Guy otherGuy, List<Guy> savedGuys)
+		{
+				yield return new WaitForSeconds (2.0f);
+				otherGuy.ShowTequilaMessage (savedGuys);
+		}
+
+		public void ShowTequilaMessage (List<Guy> savedGuys)
+		{
+				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));
+				Speak ("Tequila!");
+		}
+
+		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
+		{
+				yield return new WaitForSeconds (2.0f);
+				foreach (Guy g in savedGuys) {
+						g.ShowVictorious ();
+				}
+		}
+
+		public void ShowVictorious ()
+		{
+				spriteRenderer.sprite = savedFiestaSprite;
 		}
 }

@@ -33,7 +33,7 @@ public class Game
 	
 				int pedroIndex = (int)Mathf.Floor (Random.value * guys.Count);
 				Guy pedro = nonPedroes [pedroIndex];
-				pedro.Speak("soy Pedro");
+				pedro.Speak ("soy Pedro");
 				Debug.Log (pedro.GetId () + " is Pedro!");
 				nonPedroes.Remove (pedro);
 				PrintList ("All without Pedro", nonPedroes);
@@ -62,18 +62,19 @@ public class Game
 				shooter.ShootButRememberThatGuyIsSpecial (protagonist);
 		}
 		
-		public static void LossSequenceCoupDeGrace() {
+		public static void LossSequenceCoupDeGrace ()
+		{
 				GameState gameState = GameState.GetInstance ();
 				if (gameState.IsOutro()) {
-					List<Guy> survivors = gameState.GetSurvivorsWithGuns();
-					if (survivors.Count > 1) {
-						Debug.Log ("Coup de grace needed, " + survivors.Count + " survivors.");
-						foreach (Guy guy in survivors) {
-							guy.ShootButRememberThatGuyIsSpecial(null);
+						List<Guy> survivors = gameState.GetSurvivorsWithGuns();
+						if (survivors.Count > 1) {
+								Debug.Log ("Coup de grace needed, " + survivors.Count + " survivors.");
+								foreach (Guy guy in survivors) {
+										guy.ShootButRememberThatGuyIsSpecial(null);
+								}
+						}  else {
+								Debug.Log ("Coup de grace not needed, one survivor.");
 						}
-					} else {
-						Debug.Log ("Coup de grace not needed, one survivor.");
-					}
 				}
 		}
 		
@@ -84,5 +85,19 @@ public class Game
 						output += guy.GetId () + " ";
 				}
 				Debug.Log (output);
+		}
+
+		public static void VictorySequence (Guy pedro, List<Guy> nonPedroes, List<Guy> savedGuys)
+		{
+		Debug.Log ("victory!!!");
+				Guy otherSurvivor = null;
+				foreach (Guy g in nonPedroes) {
+						if (!savedGuys.Contains (g)) {
+								otherSurvivor = g;
+								break;
+						}
+				}
+
+				pedro.ShowAndNowMessage (otherSurvivor, savedGuys);
 		}
 }
