@@ -14,10 +14,9 @@ public class Guy : MonoBehaviour
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
 		private bool isSaved = false;
-		private bool goingAwayTime = 0;
+		private int goingAwayTime = 0;
 		private bool isGone = false;
-
-		private const Vector3 hiddenScale = new Vector3 (0, 1, 0);
+		private Vector3 hiddenScale = new Vector3 (0, 1, 0);
 
 		void Awake ()
 		{
@@ -40,9 +39,8 @@ public class Guy : MonoBehaviour
 				}
 
 				if (goingAwayTime > 0) {
-			transform.localScale.Set (Vector3.Lerp(transform.localScale, hiddenScale, 1);
-			                          }
-			                                       }
+						transform.localScale = (Vector3.Lerp (transform.localScale, hiddenScale, 1));
+				}
 		}
 
 		private void SpawnArmsIfNecessary ()
@@ -60,8 +58,9 @@ public class Guy : MonoBehaviour
 
 		private void RemoveFromScene ()
 		{
-				isSaved = true;
-				isGoingAway = true;
+//				isSaved = true;
+				
+				Destroy (this.gameObject);
 		}
 		
 		void OnMouseDown ()
@@ -69,16 +68,19 @@ public class Guy : MonoBehaviour
 				if (isSaved) {
 						return;
 				}
-				bool isPedro = gameState.isPedro (this);
-				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
-				if (isPedro) {
-						gameState.RemoveGuy (this);
-						ShutUp ();
-						RemoveFromScene ();
-						gameState.ResetGame ();
-						transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
-				} else {
-						Debug.Log ("Dead - New Game");
+				if (gameState.IsReady ()) {
+						bool isPedro = gameState.IsPedro (this);
+						Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "- he's Pedro!" : ""));
+						if (isPedro) {
+								gameState.RemoveGuy (this);
+								ShutUp ();
+								RemoveFromScene ();
+								gameState.ResetGame ();
+								transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
+						} else {
+								Debug.Log ("Massacre - New game");
+								gameState.EndGame (false);
+						}
 				}
 			
 		}

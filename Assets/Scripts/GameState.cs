@@ -7,16 +7,38 @@ public class GameState
 		private List<Guy> currentGuys = new List<Guy> ();
 		private Guy currentPedro;
 		private static GameState _instance;
+		public GamePhase phase = GamePhase.Intro;	
+		public enum GamePhase{Intro, Ready, TargetsChanging, Outro}
 
 		public void Init (List<Guy> guys)
 		{
 				currentGuys = guys;
 				currentPedro = Game.FindPedro (currentGuys);
+				phase = GamePhase.Ready;				
+		}
+		
+		public bool IsReady ()
+		{
+			return (phase == GamePhase.Ready);
 		}
 
-		public bool isPedro (Guy guy)
+		public void EndGame (bool victory)
+		{
+			phase = GamePhase.Outro;
+			if (victory) {
+				Debug.Log ("IMPLEMENTA LA VITTORIA!!");				
+			} else {
+				Debug.Log ("IMPLEMENTA LA SCONFITTA!! GAME OVER, PIRLA");				
+			}
+		}
+
+		public bool IsPedro (Guy guy)
 		{
 				return guy.Equals (currentPedro);
+		}
+		
+		public Guy GetPedro() {
+				return currentPedro;
 		}
 
 		public void RemoveGuy (Guy guy)
@@ -36,8 +58,10 @@ public class GameState
 	
 		public void ResetGame ()
 		{
+				phase = GamePhase.TargetsChanging;
 				currentPedro = Game.FindPedro (currentGuys);
 				Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
+				phase = GamePhase.Ready;
 		}
 
 		public int GetGuysCount ()
