@@ -34,7 +34,7 @@ public class Guy : MonoBehaviour
 		private readonly float SAVED_OFFSET = 0.8f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
-		private GuyChoiceBalloon guyChoiceBalloon = new GuyChoiceBalloon ();
+		public GuyChoiceBalloon guyChoiceBalloon;
 	
 		void Awake ()
 		{
