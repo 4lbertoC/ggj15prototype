@@ -10,7 +10,7 @@ public class Guy : MonoBehaviour
 		private static int guyIdCumulative = 0;
 		private int guyId;
 		private GameState gameState = GameState.GetInstance ();
-		private List<GameObject> arms = new List<GameObject> ();
+		private List<Arm> arms = new List<Arm> ();
 	    private GameObject balloon;
 	    private int framesBeforeShuttingUp = -1;
 
@@ -27,20 +27,33 @@ public class Guy : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-			if (framesBeforeShuttingUp > 0) {		
+			if (framesBeforeShuttingUp > 0) {
+				framesBeforeShuttingUp--;
 			} else if (framesBeforeShuttingUp == 0) {
 				ShutUp();
-			}			
-			framesBeforeShuttingUp--;
+			}
 		}
+	
 
+		private void SpawnArmsIfNecessary() {
+			for (int armIndex = arms.Count; armIndex < Game.ARMS_COUNT; armIndex++) {			
+				GameObject arm = Instantiate (armPrefab, this.GetPosition (), Quaternion.identity) as GameObject;
+				arm.transform.parent = this.transform;						
+				// arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
+				arms.Add (arm.GetComponent<Arm>());
+				arm.SetActive(false);
+				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " spawned");
+			}
+		}
+		
 		void OnMouseDown ()
 		{
 				bool isPedro = gameState.isPedro (this);
 				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
 				if (isPedro) {
 						gameState.RemoveGuy (this);
-						Destroy (this.gameObject);
+						ShutUp();
+						Destroy (this.gameObject);		
 						gameState.ResetGame ();
 						transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 				} else {
@@ -48,13 +61,24 @@ public class Guy : MonoBehaviour
 				}
 			
 		}
-
-		public void AimAt (Guy targetGuy)
-		{
-				GameObject arm = Instantiate (armPrefab, this.GetPosition (), Quaternion.identity) as GameObject;
-				arm.transform.parent = this.transform;
-				arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
-				arms.Add (arm);
+		
+		private Arm GetArm(int armIndex) {
+			SpawnArmsIfNecessary();
+			return arms [armIndex];
+		}
+		
+		public void AimAt (int armIndex, Guy targetGuy) {
+				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " aiming @ " + targetGuy.GetId());
+				Arm arm = GetArm (armIndex);
+				arm.target = targetGuy.transform;		
+				arm.Show();
+		}
+		
+		public void AimAtNobody (int armIndex) {
+			Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " aiming @ nobody");
+			Arm arm = GetArm (armIndex);
+			arm.target = this.transform;
+			// arm.Hide();
 		}
 
 		public Vector3 GetPosition ()
@@ -66,23 +90,15 @@ public class Guy : MonoBehaviour
 		{
 				return guyId;
 		}
-
-		public void ResetArms ()
-		{
-				foreach (GameObject arm in arms) {
-						Destroy (arm);
-				}
-			
-				arms.Clear ();
-		}
 		
 		public void Speak (string sentence)
 		{
 			
 			if (balloon == null) {
-			balloon = Instantiate (balloonPrefab, 
-                this.GetPosition () + new Vector3(0.1f, 1.0f, -2.0f),
-				Quaternion.identity) as GameObject;
+				balloon = Instantiate (balloonPrefab, 
+	                this.GetPosition () + new Vector3(0.1f, 1.0f, -2.0f),
+               		Quaternion.identity) as GameObject;
+				// balloon.transform.parent = this.transform;
 			}
 			TextMesh sentenceTextMesh = balloon.GetComponentInChildren<TextMesh>();
 			sentenceTextMesh.text = sentence;
@@ -94,5 +110,6 @@ public class Guy : MonoBehaviour
 			if (balloon != null) {
 				balloon.SetActive (false);
 			}
+			framesBeforeShuttingUp = -1;
 		}
 }
