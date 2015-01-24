@@ -67,5 +67,8 @@ public class Guy : MonoBehaviour
 			
 				arms.Clear ();
 		}
-
+		
+		public void Speak(string sentence) {
+			
+		}
 }
