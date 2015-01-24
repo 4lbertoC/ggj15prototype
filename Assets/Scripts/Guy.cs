@@ -45,11 +45,11 @@ public class Guy : MonoBehaviour
 		{
 				guyId = guyIdCumulative++;
 				
-				sentences.Add ("What?");
-				sentences.Add ("Do?");
-				sentences.Add ("We?");
-				sentences.Add ("Do?");		
-				sentences.Add ("Now?");
+				sentences.Add ("Hey");
+				sentences.Add ("...!");
+				sentences.Add ("Don't");
+				sentences.Add ("WTF?");		
+				sentences.Add ("Surr\nender");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}
@@ -137,7 +137,7 @@ public class Guy : MonoBehaviour
 		
 		public void PedroRun ()
 		{	
-				gameState.EndByRunning (this);
+				gameState.ProceedByRunning(this);
 			
 		}
 		
@@ -148,7 +148,7 @@ public class Guy : MonoBehaviour
 		
 		public void NonPedroRun ()
 		{
-				gameState.EndByRunning (this);
+				gameState.ProceedByRunning(this);
 		}
 		
 		public void NonPedroShoot ()
@@ -240,13 +240,13 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
-				if (!chased) {
-						scared = true;
-						for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-								AimAtNobody (armIndex);
-						}
-						StartCoroutine (ScreamOhNoCoroutine ());
-				}
+			scared = true;
+			if (!chased) {
+				for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+					AimAtNobody(armIndex);
+				}	
+			}			
+			StartCoroutine(ScreamOhNoCoroutine());
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
