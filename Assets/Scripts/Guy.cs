@@ -46,11 +46,11 @@ public class Guy : MonoBehaviour
 		{
 				guyId = guyIdCumulative++;
 				
-				sentences.Add ("What?");
-				sentences.Add ("Do?");
-				sentences.Add ("We?");
-				sentences.Add ("Do?");		
-				sentences.Add ("Now?");
+				sentences.Add ("Hey");
+				sentences.Add ("...!");
+				sentences.Add ("Don't");
+				sentences.Add ("WTF?");		
+				sentences.Add ("Surr\nender");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}

@@ -5,7 +5,7 @@ public class Arm : MonoBehaviour
 {
 
 		public Guy target = null;
-		public float speed = 0.1f; // in radians/sec
+		public float speed = 1.0f; // in radians/sec
 		public GameObject bulletPrefab;
 		private bool canShoot = true;
 
