@@ -17,10 +17,15 @@ public class Guy : MonoBehaviour
 		private int goingAwayTime = 0;
 		private bool isGone = false;
 		private Vector3 hiddenScale = new Vector3 (0, 1, 0);
-
+		private List<string> sentences = new List<string> ();
+		
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
+				sentences.Add ("What?");
+				sentences.Add ("1");
+				sentences.Add ("2");
+				sentences.Add ("");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 		}
 
@@ -124,9 +129,7 @@ public class Guy : MonoBehaviour
 		{
 			
 				if (balloon == null) {
-						balloon = Instantiate (balloonPrefab, 
-	                this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f),
-               		Quaternion.identity) as GameObject;
+						balloon = Instantiate (balloonPrefab, this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f), Quaternion.identity) as GameObject;
 						// balloon.transform.parent = this.transform;
 				}
 				TextMesh sentenceTextMesh = balloon.GetComponentInChildren<TextMesh> ();
@@ -135,6 +138,15 @@ public class Guy : MonoBehaviour
 				framesBeforeShuttingUp = 90;
 		}
 		
+		public void Speak ()
+		{
+				int random = (int)Mathf.Floor (Random.Range(0,sentences.Count));
+				Debug.Log ("Random speak " + random);
+				if (random != 0) {
+						this.Speak (sentences [random]);
+				}
+		}
+
 		public void ShutUp ()
 		{
 				if (balloon != null) {

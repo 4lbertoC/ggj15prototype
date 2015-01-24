@@ -8,7 +8,13 @@ public class GameState
 		private Guy currentPedro;
 		private static GameState _instance;
 		public GamePhase phase = GamePhase.Intro;	
-		public enum GamePhase{Intro, Ready, TargetsChanging, Outro}
+		public enum GamePhase
+		{
+				Intro,
+				Ready,
+				TargetsChanging,
+				Outro
+		}
 
 		public void Init (List<Guy> guys)
 		{
@@ -19,17 +25,22 @@ public class GameState
 		
 		public bool IsReady ()
 		{
-			return (phase == GamePhase.Ready);
+				return (phase == GamePhase.Ready);
 		}
 
+		public bool IsIntro ()
+		{
+				return (phase == GamePhase.Intro);
+		}
+	
 		public void EndGame (bool victory)
 		{
-			phase = GamePhase.Outro;
-			if (victory) {
-				Debug.Log ("IMPLEMENTA LA VITTORIA!!");				
-			} else {
-				Debug.Log ("IMPLEMENTA LA SCONFITTA!! GAME OVER, PIRLA");				
-			}
+				phase = GamePhase.Outro;
+				if (victory) {
+						Debug.Log ("IMPLEMENTA LA VITTORIA!!");				
+				} else {
+						Debug.Log ("IMPLEMENTA LA SCONFITTA!! GAME OVER, PIRLA");				
+				}
 		}
 
 		public bool IsPedro (Guy guy)
@@ -37,7 +48,8 @@ public class GameState
 				return guy.Equals (currentPedro);
 		}
 		
-		public Guy GetPedro() {
+		public Guy GetPedro ()
+		{
 				return currentPedro;
 		}
 
