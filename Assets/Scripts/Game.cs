@@ -20,11 +20,13 @@ public class Game
 				return targets;
 		}
 
-		public static Dictionary<Guy, List<Guy>> CalculateAllTargets (List<Guy> guys)
-		{
-		
+		public static Guy FindPedro (List<Guy> guys)
+		{		
 				Dictionary<Guy, List<Guy>> allTargets = new Dictionary<Guy, List<Guy>> ();
-				List<Guy> nonPedroes = new List<Guy> (guys);
+				List<Guy> nonPedroes = new List<Guy> (guys);				
+				foreach (Guy g in guys) {
+					g.ResetArms();
+				}
 				
 				PrintList("All", nonPedroes);
 	
@@ -48,7 +50,7 @@ public class Game
 				foreach (Guy nonPedro in shuffledNonPedroes) {
 					allTargets.Add (nonPedro, ChooseTargets (nonPedro, targetsQueue));
 				}
-				return allTargets;
+				return pedro;
 		}
 		
 		private static void PrintList(string message, List<Guy> guysToPrint) {

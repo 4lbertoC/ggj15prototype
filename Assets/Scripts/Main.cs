@@ -7,8 +7,9 @@ public class Main : MonoBehaviour
 
 		public GameObject guyPrefab;
 		private List<Vector3> positions = new List<Vector3> ();
-		private List<Guy> guys = new List<Guy> ();
 		private Quaternion defaultRotation = Quaternion.Euler (270, 0, 0);
+
+		private GameState gameState = GameState.GetInstance();
 
 		void Awake ()
 		{
@@ -35,6 +36,7 @@ public class Main : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
+				List<Guy> guys = new List<Guy> ();
 
 				for (int i = 0; i < positions.Count; i++) {
 						GameObject guyGO = (GameObject)Instantiate (guyPrefab, positions [i], defaultRotation);
@@ -42,9 +44,7 @@ public class Main : MonoBehaviour
 						guys.Add (guy);
 				}
 
-				Dictionary<Guy, List<Guy>> allTargets = Game.CalculateAllTargets (guys);
-
-				PrintCombinations (allTargets);
+				gameState.Init(guys);
 
 		}
 	
