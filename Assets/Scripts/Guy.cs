@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -33,6 +33,7 @@ public class Guy : MonoBehaviour
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
 		private GuyPhase phase = GuyPhase.Ready;
+		private GuyChoiceBalloon guyChoiceBalloon = new GuyChoiceBalloon ();
 	
 		void Awake ()
 		{
@@ -59,7 +60,7 @@ public class Guy : MonoBehaviour
 						ShutUp ();
 				}
 
-				if (phase.Equals(GuyPhase.Saved)) {
+				if (phase.Equals (GuyPhase.Saved)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, HIDDEN_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
@@ -71,7 +72,7 @@ public class Guy : MonoBehaviour
 						}
 				}
 
-				if (phase.Equals(GuyPhase.Gone)) {
+				if (phase.Equals (GuyPhase.Gone)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
@@ -92,7 +93,7 @@ public class Guy : MonoBehaviour
 				}
 		}
 
-		private void RemoveFromScene ()
+		public void RemoveFromScene ()
 		{
 				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
@@ -104,21 +105,7 @@ public class Guy : MonoBehaviour
 		void OnMouseDown ()
 		{
 				if (gameState.IsReady ()) {
-						bool isPedro = gameState.IsPedro (this);
-						Debug.Log ("Clicked " + guyId + (isPedro ? "- he's Pedro!" : ""));
-						if (phase.Equals(GuyPhase.Saved)) {
-								return;
-						}
-						if (isPedro) {
-								gameState.RemoveGuy (this);
-								ShutUp ();
-								RemoveFromScene ();
-								gameState.ResetGame ();
-								transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
-						} else {
-								Debug.Log ("Massacre - New game");
-								gameState.EndGame (false);
-						}
+						guyChoiceBalloon.ShowChoice (this);
 				}
 			
 		}
@@ -268,5 +255,10 @@ public class Guy : MonoBehaviour
 		public bool IsAlive ()
 		{
 				return !dead;
+		}
+
+		public GuyPhase GetPhase ()
+		{
+				return phase;
 		}
 }
