@@ -11,6 +11,8 @@ public class Guy : MonoBehaviour
 		private int guyId;
 		private GameState gameState = GameState.GetInstance ();
 		private List<GameObject> arms = new List<GameObject> ();
+	    private GameObject balloon;
+	    private int framesBeforeShuttingUp = -1;
 
 		void Awake ()
 		{
@@ -25,7 +27,11 @@ public class Guy : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-			
+			if (framesBeforeShuttingUp > 0) {		
+			} else if (framesBeforeShuttingUp == 0) {
+				ShutUp();
+			}			
+			framesBeforeShuttingUp--;
 		}
 
 		void OnMouseDown ()
@@ -71,11 +77,20 @@ public class Guy : MonoBehaviour
 		
 		public void Speak(string sentence) {
 			
-			GameObject balloon = Instantiate (balloonPrefab, 
+			if (balloon == null) {
+			balloon = Instantiate (balloonPrefab, 
                 this.GetPosition () + new Vector3(0.1f, 1.0f, -2.0f),
 				Quaternion.identity) as GameObject;
+			}
 			TextMesh sentenceTextMesh = balloon.GetComponentInChildren<TextMesh>();
 			sentenceTextMesh.text = sentence;
 			balloon.SetActive(true);
+			framesBeforeShuttingUp = 90;
+		}
+		
+		public void ShutUp() {
+			if (balloon != null) {
+				balloon.SetActive (false);
+			}
 		}
 }
