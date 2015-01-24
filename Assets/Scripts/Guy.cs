@@ -6,6 +6,7 @@ public class Guy : MonoBehaviour
 {
 
 		public GameObject armPrefab;
+		public GameObject balloonPrefab;
 		private static int guyIdCumulative = 0;
 		private int guyId;
 		private GameState gameState = GameState.GetInstance ();
@@ -70,5 +71,11 @@ public class Guy : MonoBehaviour
 		
 		public void Speak(string sentence) {
 			
+			GameObject balloon = Instantiate (balloonPrefab, 
+                this.GetPosition () + new Vector3(0.1f, 1.0f, -2.0f),
+				Quaternion.identity) as GameObject;
+			TextMesh sentenceTextMesh = balloon.GetComponentInChildren<TextMesh>();
+			sentenceTextMesh.text = sentence;
+			balloon.SetActive(true);
 		}
 }
