@@ -6,6 +6,7 @@ public class Main : MonoBehaviour
 {
 
 		public GameObject guyPrefab;
+		public GameObject housePrefab;
 		private List<Vector3> positions = new List<Vector3> ();
 		private Quaternion defaultRotation = Quaternion.Euler (270, 0, 0);
 		private GameState gameState = GameState.GetInstance ();
@@ -39,6 +40,7 @@ public class Main : MonoBehaviour
 
 				for (int i = 0; i < positions.Count; i++) {
 						GameObject guyGO = (GameObject)Instantiate (guyPrefab, positions [i], defaultRotation);
+						Instantiate (housePrefab, positions [i], Quaternion.identity);
 						guyGO.transform.parent = this.transform;
 						Guy guy = guyGO.GetComponent<Guy> ();
 						guys.Add (guy);
