@@ -28,6 +28,7 @@ public class Guy : MonoBehaviour
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
+				
 				sentences.Add ("What?");
 				sentences.Add ("1");
 				sentences.Add ("2");
@@ -163,10 +164,10 @@ public class Guy : MonoBehaviour
 		
 		public void Speak ()
 		{
-				int random = (int)Mathf.Floor (Random.Range (0, sentences.Count));
+				int random = (int)Mathf.Floor (Random.Range (0, sentences.Count +1));
 				Debug.Log ("Random speak " + random);
 				if (random != 0) {
-						this.Speak (sentences [random]);
+						this.Speak (sentences [random -1 ]);
 				}
 		}
 
