@@ -8,7 +8,7 @@ public class GameState
 		public event RemoveGuyAction OnRemoveGuy;
 
 		public delegate void VictoryAction ();
-		public event VictoryAction OnVictory;
+		// public event VictoryAction OnVictory;
 
 		private List<Guy> currentGuys = new List<Guy> ();
 		private Guy currentPedro;
@@ -68,26 +68,39 @@ public class GameState
 				}
 		}
 	
-		public void EndGame (bool victory)
+		public void EndGame ()
 		{
-			phase = GamePhase.Outro;
-			if (victory) {
-				Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
+			if (currentGuys.Count == 2) {
+					phase = GamePhase.Outro;
+					Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
 			} else {
-				Debug.LogError ("MA CHE CAZZ...?!");
+					ResetGame ();
 			}
+			
 		}
 		
 		public void EndByRunning (Guy runner)
 		{		
-				phase = GamePhase.Outro;
+				
 				if (runner == currentPedro) {
-					Debug.LogError ("If Pedro runs, it should not be game over!");
+						RemoveGuy (runner);
+						Game.SalvationFor(runner);
+						if (currentGuys.Count == 2) {					
+								phase = GamePhase.Outro;
+								gameOverType = GameOverType.HappyEnding;
+								Game.VictorySequence(currentPedro, currentGuys, savedGuys);
+						} else {
+								ResetGame ();
+						}
 				} else {
-					gameOverType = GameOverType.Martyrdom;
+						phase = GamePhase.Outro;
+						gameOverType = GameOverType.Martyrdom;
+						foreach (Guy guy in currentGuys) {
+								if (guy.IsAimingAt(runner)) {
+										Game.ShootingSpree(runner, guy);
+								}
+						}
 				}
-				// Trova chi spara a runner
-				// Game.ShootingSpree(runner, shooter);
 		}	
 
 		public bool IsPedro (Guy guy)

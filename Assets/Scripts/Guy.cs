@@ -24,6 +24,7 @@ public class Guy : MonoBehaviour
 		private List<Arm> arms = new List<Arm> ();
 		private bool dead = false;
 		private bool scared = false;
+		private bool chased = false;
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
 		private float transitionTime = 0;
@@ -43,9 +44,10 @@ public class Guy : MonoBehaviour
 				guyId = guyIdCumulative++;
 				
 				sentences.Add ("What?");
-				sentences.Add ("1");
-				sentences.Add ("2");
-				sentences.Add ("");
+				sentences.Add ("Do?");
+				sentences.Add ("We?");
+				sentences.Add ("Do?");		
+				sentences.Add ("Now?");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}
@@ -122,17 +124,15 @@ public class Guy : MonoBehaviour
 		void OnMouseDown ()
 		{
 				if (gameState.IsReady ()) {
-						guyChoiceBalloon.ShowChoice (this);
-						if (gameState.GetGuysCount () == 2) {
-								gameState.EndGame (true);
-						}
+						guyChoiceBalloon.ShowChoice (this);					
 				}
 			
 		}
 		
 		public void PedroRun ()
-		{
-		
+		{	
+				gameState.EndByRunning(this);
+			
 		}
 		
 		public void PedroShoot() {
@@ -141,7 +141,7 @@ public class Guy : MonoBehaviour
 		
 		public void NonPedroRun ()
 		{
-			
+				gameState.EndByRunning(this);
 		}
 		
 		public void NonPedroShoot() {
@@ -173,6 +173,16 @@ public class Guy : MonoBehaviour
 				arm.target = null;
 		}
 
+		public bool IsAimingAt (Guy candidateTarget)
+		{
+				foreach (Arm arm in arms) {
+						if (arm.target == candidateTarget)  {
+								return true;
+						}
+				}
+				return false;
+		}
+
 		public Vector3 GetPosition ()
 		{
 				return this.transform.position;
@@ -197,7 +207,7 @@ public class Guy : MonoBehaviour
 				framesBeforeShuttingUp = 90;
 		}
 		
-		public void Speak ()
+		public void RandomSpeak ()
 		{
 				int random = (int)Mathf.Floor (Random.Range (0, sentences.Count + 1));
 				Debug.Log ("Random speak " + random);
@@ -214,13 +224,21 @@ public class Guy : MonoBehaviour
 				framesBeforeShuttingUp = -1;
 		}
 
+		public void Chase (Guy chasedGuy)
+		{
+				Speak ("STOP!");
+				chasedGuy.chased = true;
+		}
+
 		void BeScared ()
 		{
-			scared = true;
-			for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-				AimAtNobody(armIndex);
+			if (!chased) {
+				scared = true;
+				for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+					AimAtNobody(armIndex);
+				}
+				StartCoroutine(ScreamOhNoCoroutine());
 			}
-			StartCoroutine(ScreamOhNoCoroutine());
 		}
 		
 		IEnumerator ScreamOhNoCoroutine() {
@@ -291,24 +309,24 @@ public class Guy : MonoBehaviour
 		public void ShowAndNowMessage (Guy otherGuy, List<Guy> savedGuys)
 		{
 				StartCoroutine (ShowAndNowMessageCoroutine (otherGuy, savedGuys));
-				Speak ("And now?");
 		}
 
 		IEnumerator ShowAndNowMessageCoroutine (Guy otherGuy, List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				Speak ("And now?");
 				otherGuy.ShowTequilaMessage (savedGuys);
 		}
 
 		public void ShowTequilaMessage (List<Guy> savedGuys)
 		{
-				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));
-				Speak ("Tequila!");
+				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));				
 		}
 
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				Speak ("Tequila!");
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}

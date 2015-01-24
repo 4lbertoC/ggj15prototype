@@ -22,8 +22,19 @@ public class GuyChoiceBalloon : MonoBehaviour
 //		shootR.SetActive (true);
 
 		bool isPedro = gameState.IsPedro (guy);
-		Debug.Log ("Clicked " + guy.GetId() + (isPedro ? "- he's Pedro!" : ""));
+		Debug.Log ("Clicked " + guy.GetId() + (isPedro ? "- he's Pedro!" : ""));				
 
+		// Recupera l'esito
+		// Caso RUN:
+		if (isPedro) {
+				guy.PedroRun ();
+		} else {
+				guy.NonPedroRun();
+		}
+		// Caso SHOOT:
+		// ...
+
+		/*
 		if (isPedro) {
 			gameState.RemoveGuy (guy);
 			guy.ShutUp ();
@@ -32,8 +43,9 @@ public class GuyChoiceBalloon : MonoBehaviour
 			guy.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 		} else {
 			Debug.Log ("Massacre - New game");
-			gameState.EndGame (false);
+			gameState.EndByShooting(guy);
 		}
+		*/
 
 	}
 
