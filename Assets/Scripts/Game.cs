@@ -93,7 +93,7 @@ public class Game
 		Debug.Log ("victory!!!");
 				Guy otherSurvivor = null;
 				foreach (Guy g in nonPedroes) {
-						if (!savedGuys.Contains (g)) {
+						if (!savedGuys.Contains (g) && !g.Equals(pedro)) {
 								otherSurvivor = g;
 								break;
 						}

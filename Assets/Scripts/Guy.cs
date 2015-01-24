@@ -72,13 +72,17 @@ public class Guy : MonoBehaviour
 								transitionTime = STARTING_TRANSITION_TIME;
 								transform.localPosition = SAVED_STARTING_POSITION + new Vector3 (SAVED_OFFSET * gameState.GetSavedGuysCount (), 0, 0);
 						}
-				}
-
-				if (phase.Equals (GuyPhase.Gone)) {
+				} else if (phase.Equals (GuyPhase.Gone)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						}
+				} else if(phase.Equals (GuyPhase.Victorious)) {
+					if((Mathf.Floor(Time.time * 5) % 2) == 0) {
+						spriteRenderer.sprite = savedFiestaSprite;
+					} else {
+						spriteRenderer.sprite = savedSprite;
+					}
 				}
 		}
 
@@ -294,6 +298,6 @@ public class Guy : MonoBehaviour
 
 		public void ShowVictorious ()
 		{
-				spriteRenderer.sprite = savedFiestaSprite;
+			phase = GuyPhase.Victorious;
 		}
 }
