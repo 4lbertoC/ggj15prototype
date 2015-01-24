@@ -25,48 +25,22 @@ public class GuyChoiceBalloon : MonoBehaviour
 		Debug.Log ("Clicked " + guy.GetId() + (isPedro ? "- he's Pedro!" : ""));				
 
 		// Recupera l'esito
+		bool isChosenRun = true; // TEMPORANEO
 		// Caso RUN:
-		if (isPedro) {
+		if (isChosenRun) {
+			if (isPedro) {
+					guy.PedroRun ();
+			} else {
+					guy.NonPedroRun();
+			}
+		} else {		
+			// Caso SHOOT:
+			if (isPedro) {
 				guy.PedroRun ();
-		} else {
+			} else {
 				guy.NonPedroRun();
+			}
 		}
-		// Caso SHOOT:
-		// ...
-
-		/*
-		if (isPedro) {
-			gameState.RemoveGuy (guy);
-			guy.ShutUp ();
-			guy.RemoveFromScene ();
-			gameState.ResetGame ();
-			guy.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
-		} else {
-			Debug.Log ("Massacre - New game");
-			gameState.EndByShooting(guy);
-		}
-		*/
-
-	}
-
-	public void OnPedroShoot(Guy guy){
-		gameState.RemoveGuy (guy);
-		guy.ShutUp ();
-		guy.RemoveFromScene ();
-		gameState.ResetGame ();
-		guy.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
-	}
-
-	public void OnNotPedroShoot(Guy guy){
-		Debug.Log ("TODO - OnNotPedroShoot");
-	}
-
-	public void OnPedroRun(Guy guy){
-		Debug.Log ("TODO - OnPedroRun");
-	}
-
-	public void OnNotPedroRun(Guy guy){
-		Debug.Log ("TODO - OnNotPedroRun");
 	}
 }
 
