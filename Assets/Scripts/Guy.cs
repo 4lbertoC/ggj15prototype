@@ -13,7 +13,7 @@ public class Guy : MonoBehaviour
 		private int guyId;
 		private GameState gameState = GameState.GetInstance ();
 		private List<Arm> arms = new List<Arm> ();
-	    private bool dead = false;
+		private bool dead = false;
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
 		private bool isSaved = false;
@@ -95,24 +95,23 @@ public class Guy : MonoBehaviour
 		
 		void OnMouseDown ()
 		{
-			if (gameState.IsReady()) {
-					bool isPedro = gameState.IsPedro (this);
-					Debug.Log ("Clicked " + guyId + (isPedro ? "- he's Pedro!" : ""));
-					if (isSaved) {
-						return;
-					}
-					if (isPedro) {
-							gameState.RemoveGuy (this);
-							ShutUp();
-							RemoveFromScene ();
-							Destroy (this.gameObject);		
-							gameState.ResetGame ();
-							transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
-					} else {
-							Debug.Log ("Massacre - New game");
-							gameState.EndGame (false);
-					}
-			}
+				if (gameState.IsReady ()) {
+						bool isPedro = gameState.IsPedro (this);
+						Debug.Log ("Clicked " + guyId + (isPedro ? "- he's Pedro!" : ""));
+						if (isSaved) {
+								return;
+						}
+						if (isPedro) {
+								gameState.RemoveGuy (this);
+								ShutUp ();
+								RemoveFromScene ();
+								gameState.ResetGame ();
+								transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
+						} else {
+								Debug.Log ("Massacre - New game");
+								gameState.EndGame (false);
+						}
+				}
 			
 		}
 		
@@ -170,21 +169,23 @@ public class Guy : MonoBehaviour
 		{
 			
 				if (balloon == null) {
-						balloon = Instantiate (balloonPrefab, this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f), Quaternion.identity) as GameObject;
+						balloon = Instantiate (balloonPrefab, 
+								this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f), 
+								Quaternion.identity) as GameObject;
 						// balloon.transform.parent = this.transform;
 				}
+				balloon.SetActive (true);
 				TextMesh sentenceTextMesh = balloon.GetComponentInChildren<TextMesh> ();
 				sentenceTextMesh.text = sentence;
-				balloon.SetActive (true);
 				framesBeforeShuttingUp = 90;
 		}
 		
 		public void Speak ()
 		{
-				int random = (int)Mathf.Floor (Random.Range (0, sentences.Count +1));
+				int random = (int)Mathf.Floor (Random.Range (0, sentences.Count + 1));
 				Debug.Log ("Random speak " + random);
 				if (random != 0) {
-						this.Speak (sentences [random -1 ]);
+						this.Speak (sentences [random - 1]);
 				}
 		}
 
@@ -198,12 +199,12 @@ public class Guy : MonoBehaviour
 
 		public void ShootSlow ()
 		{
-			Shoot (5.0f);
+				Shoot (5.0f);
 		}
 		
 		public void ShootFast ()
 		{
-			Shoot (40.0f);
+				Shoot (40.0f);
 		}
 	
 		public void Shoot (float bulletSpeed)
@@ -222,17 +223,17 @@ public class Guy : MonoBehaviour
 
 		IEnumerator DeathCoroutine ()
 		{
-			yield return new WaitForSeconds(0.1f);
-			gameObject.GetComponentInChildren<Body>().Hide();
-			foreach (Arm arm in arms) {
-				arm.Hide();
-			}
-			gameObject.GetComponentInChildren<Corpse>().Show();
-			dead = true;
+				yield return new WaitForSeconds (0.1f);
+				gameObject.GetComponentInChildren<Body> ().Hide ();
+				foreach (Arm arm in arms) {
+						arm.Hide ();
+				}
+				gameObject.GetComponentInChildren<Corpse> ().Show ();
+				dead = true;
 		}
 	
 		public void Die ()
-		{		
+		{
 			if (IsAlive()) {			
 				StartCoroutine(DeathCoroutine());			
 				ShootFast();
