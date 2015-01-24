@@ -33,7 +33,7 @@ public class Guy : MonoBehaviour
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
 		private GuyPhase phase = GuyPhase.Ready;
-		private GuyChoiceBalloon guyChoiceBalloon = new GuyChoiceBalloon ();
+		public GuyChoiceBalloon guyChoiceBalloon ;
 	
 		void Awake ()
 		{
