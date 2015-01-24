@@ -81,9 +81,8 @@ public class Guy : MonoBehaviour
 		
 		public void AimAtNobody (int armIndex) {
 			Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " aiming @ nobody");
-			Arm arm = GetArm (armIndex);
-			
-			arm.target = this.transform;
+			Arm arm = GetArm (armIndex);			
+			arm.target = null;
 			// arm.Hide();
 		}
 

@@ -6,21 +6,21 @@ public class Game
 {
 
 		public const int ARMS_COUNT = 2;
-		private const float LIKELIHOOD_OF_MORE_THAN_ONE_ARM = 0.5f;
+		private const float LIKELIHOOD_OF_MORE_THAN_ONE_ARM = 0.2f;
 
 		private static List<Guy> ChooseTargets (Guy shootingGuy, PriorityQueue otherGuys)
 		{
-				List<Guy> targets = new List<Guy> ();
-				for (int armIndex = 0; armIndex < ARMS_COUNT; armIndex++) {
-						if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
-								Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
-								targets.Add (targetGuy);
-								shootingGuy.AimAt (armIndex, targetGuy);
-						} else {
-								shootingGuy.AimAtNobody (armIndex);
-						}
+			List<Guy> targets = new List<Guy> ();
+			for (int armIndex = 0; armIndex < ARMS_COUNT; armIndex++) {
+				if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
+						Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
+						targets.Add (targetGuy);
+						shootingGuy.AimAt (armIndex, targetGuy);
+				} else {
+						shootingGuy.AimAtNobody (armIndex);
 				}
-				return targets;
+			}
+			return targets;
 		}
 
 		public static Guy FindPedro (List<Guy> guys)

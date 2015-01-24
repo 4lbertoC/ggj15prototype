@@ -16,14 +16,17 @@ public class Arm : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-				if (target != null) {
-						Vector3 targetDir = target.position - transform.position;
-						targetDir.z = 0;
-						float step = speed * Time.deltaTime;
-						Vector3 newDir = Vector3.RotateTowards (transform.forward, targetDir, step, 0.0F);
-						// Debug.DrawRay(transform.position, newDir, Color.red);
-						transform.rotation = Quaternion.LookRotation (newDir);
-				}
+			Vector3 targetDir;
+			float step = speed * Time.deltaTime;
+			if (target != null) {
+				targetDir = target.position - transform.position;
+				targetDir.z = 0;					
+			} else {
+				targetDir = new Vector3(0f, 0f, 100f);					
+			}
+			Vector3 newDir = Vector3.RotateTowards (transform.forward, targetDir, step, 0.0F);
+			// Debug.DrawRay(transform.position, newDir, (target == null ? Color.red : Color.yellow);
+			transform.rotation = Quaternion.LookRotation (newDir);
 		}
 	
 		public void Hide ()
