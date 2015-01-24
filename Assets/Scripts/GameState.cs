@@ -67,17 +67,6 @@ public class GameState
 					Game.ShootingSpree(shooter, shooter);
 				}
 		}
-	
-		public void EndGame ()
-		{
-			if (currentGuys.Count == 2) {
-					phase = GamePhase.Outro;
-					Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
-			} else {
-					ResetGame ();
-			}
-			
-		}
 		
 		public void EndByRunning (Guy runner)
 		{		
@@ -88,7 +77,7 @@ public class GameState
 						if (currentGuys.Count == 2) {					
 								phase = GamePhase.Outro;
 								gameOverType = GameOverType.HappyEnding;
-								Game.VictorySequence(currentPedro, currentGuys, savedGuys);
+								Game.VictorySequence(currentGuys, savedGuys);
 						} else {
 								ResetGame ();
 						}
