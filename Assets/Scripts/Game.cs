@@ -102,7 +102,7 @@ public class Game
 				if (juan.transform.position.x < gonzalo.transform.position.x) {
 						juan.ShowAndNowMessage (gonzalo, savedGuys);
 				} else {
-						juan.ShowAndNowMessage (gonzalo, savedGuys);
+						gonzalo.ShowAndNowMessage (juan, savedGuys);
 				}
 				
 		}
