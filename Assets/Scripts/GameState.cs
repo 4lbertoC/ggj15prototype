@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class GameState
 {
+		public delegate void RemoveGuyAction();
+		public event RemoveGuyAction OnRemoveGuy;
+
 		private List<Guy> currentGuys = new List<Guy> ();
 		private Guy currentPedro;
 		private static GameState _instance;
@@ -64,6 +67,7 @@ public class GameState
 		{
 				currentGuys.Remove (guy);
 				savedGuys.Add (guy);
+				OnRemoveGuy ();
 		}
 
 		public static GameState GetInstance ()

@@ -17,7 +17,7 @@ public class Main : MonoBehaviour
 //				positions.Add (new Vector3 (-3, 3, 0));
 //				positions.Add (new Vector3 (5, -2, 0));
 //				positions.Add (new Vector3 (3, 3, 0));
-				positions.Add (new Vector3 (0, -4, 0));
+//				positions.Add (new Vector3 (0, -4, 0));
 				positions.Add (new Vector3 (-3.36f, 3.98f, 0.68f));
 				positions.Add (new Vector3 (2.65f, 3.78f, 2.62f));
 				positions.Add (new Vector3 (-6.26f, 0.5f, -0.23f));
