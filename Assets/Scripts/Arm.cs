@@ -7,6 +7,7 @@ public class Arm : MonoBehaviour
 		public Guy target = null;
 		public float speed = 0.1f; // in radians/sec
 		public GameObject bulletPrefab;
+		private bool canShoot = true;
 
 		// Use this for initialization
 		void Start ()
@@ -44,6 +45,11 @@ public class Arm : MonoBehaviour
 		{
 				if (target == null) {
 						return;
+				}
+				if (canShoot) {
+					canShoot = false;
+				} else {
+					return;
 				}
 				Bullet bullet = (Instantiate (bulletPrefab, 
 	             		transform.position,

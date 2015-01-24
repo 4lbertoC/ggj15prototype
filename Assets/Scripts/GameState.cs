@@ -68,7 +68,7 @@ public class GameState
 				}
 		}
 		
-		public void EndByRunning (Guy runner)
+		public void ProceedByRunning (Guy runner)
 		{		
 				
 				if (runner == currentPedro) {

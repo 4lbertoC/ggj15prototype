@@ -138,7 +138,7 @@ public class Guy : MonoBehaviour
 		
 		public void PedroRun ()
 		{	
-				gameState.EndByRunning(this);
+				gameState.ProceedByRunning(this);
 			
 		}
 		
@@ -148,7 +148,7 @@ public class Guy : MonoBehaviour
 		
 		public void NonPedroRun ()
 		{
-				gameState.EndByRunning(this);
+				gameState.ProceedByRunning(this);
 		}
 		
 		public void NonPedroShoot() {
@@ -239,13 +239,14 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
+			scared = true;
 			if (!chased) {
-				scared = true;
 				for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
 					AimAtNobody(armIndex);
-				}
-				StartCoroutine(ScreamOhNoCoroutine());
-			}
+				}	
+			}			
+			StartCoroutine(ScreamOhNoCoroutine());
+			
 		}
 		
 		IEnumerator ScreamOhNoCoroutine() {
