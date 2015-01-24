@@ -37,6 +37,11 @@ public class GameState
 		{
 				return (phase == GamePhase.Intro);
 		}
+
+		public bool IsOutro ()
+		{
+				return (phase == GamePhase.Outro);
+		}
 	
 		public void EndGame (bool victory)
 		{
@@ -56,6 +61,17 @@ public class GameState
 		public Guy GetPedro ()
 		{
 				return currentPedro;
+		}
+		
+		public List<Guy> GetSurvivorsWithGuns ()
+		{
+			List<Guy> survivors = new List<Guy>();
+			foreach (Guy guy in currentGuys) {
+				if (guy.IsAlive()) {
+					survivors.Add(guy);
+				}
+			}
+			return survivors;
 		}
 
 		public int GetSavedGuysCount ()

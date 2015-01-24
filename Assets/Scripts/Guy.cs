@@ -116,6 +116,22 @@ public class Guy : MonoBehaviour
 			
 		}
 		
+		public void PedroRun() {
+		
+		}
+		
+		public void PedroShoot() {
+			
+		}
+		
+		public void NonPedroRun() {
+			
+		}
+		
+		public void NonPedroShoot() {
+			
+		}
+		
 		private Arm GetArm (int armIndex)
 		{
 				SpawnArmsIfNecessary ();
@@ -195,6 +211,13 @@ public class Guy : MonoBehaviour
 			foreach (Arm arm in arms) {
 				arm.Shoot(bulletSpeed);
 			}
+			StartCoroutine(IncompleteMassacreCoroutine());
+		}
+		
+		IEnumerator IncompleteMassacreCoroutine () {
+			yield return new WaitForSeconds(8.0f);
+			Debug.Log ("Check if coup de grace is needed");
+			Game.LossSequenceCoupDeGrace();
 		}
 
 		IEnumerator DeathCoroutine ()
@@ -210,7 +233,7 @@ public class Guy : MonoBehaviour
 	
 		public void Die ()
 		{		
-			if (!dead) {			
+			if (IsAlive()) {			
 				StartCoroutine(DeathCoroutine());			
 				ShootFast();
 			}
@@ -218,7 +241,7 @@ public class Guy : MonoBehaviour
 		
 		public void Raise ()
 		{
-			if (dead) {
+			if (!IsAlive()) {
 				gameObject.GetComponentInChildren<Corpse>().Hide();
 				gameObject.GetComponentInChildren<Body>().Show();			
 				foreach (Arm arm in arms) {
@@ -226,5 +249,10 @@ public class Guy : MonoBehaviour
 				}
 				dead = false;
 			}
+		}
+
+		public bool IsAlive ()
+		{
+			return !dead;
 		}
 }

@@ -60,8 +60,20 @@ public class Game
 		
 		public static void LossSequence(Guy pedro, List<Guy> nonPedroes) {
 				pedro.ShootSlow();
-				foreach (Guy nonPedro in nonPedroes) {
-						// nonPedro.ShootFast();
+		}
+		
+		public static void LossSequenceCoupDeGrace() {
+				GameState gameState = GameState.GetInstance ();
+				if (gameState.IsOutro()) {
+					List<Guy> survivors = gameState.GetSurvivorsWithGuns();
+					if (survivors.Count > 1) {
+						Debug.Log ("Coup de grace needed, " + survivors.Count + " survivors.");
+						foreach (Guy guy in survivors) {
+							guy.ShootFast();
+						}
+					} else {
+						Debug.Log ("Coup de grace not needed, one survivor.");
+					}
 				}
 		}
 		
@@ -73,7 +85,4 @@ public class Game
 				}
 				Debug.Log (output);
 		}
-
-
-
 }
