@@ -24,5 +24,18 @@ public class PriorityQueue
 
 				return head;
 		}
+		
+		public object GetAndTouchHeadButNot (object excludedObject)
+		{
+			object head = excludedObject;
+			int headKey = sortedList.Keys [0]; // default
+		    for (int i = 0; head == excludedObject && i < sortedList.Count; i++) { 
+				headKey = sortedList.Keys [i];
+				sortedList.TryGetValue (headKey, out head);
+			}
+			sortedList.Remove (headKey);
+			sortedList.Add (cumulativeIdx++, head);			
+			return head;
+		}
 }
 
