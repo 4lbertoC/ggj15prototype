@@ -37,6 +37,9 @@ public class Guy : MonoBehaviour
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
 		public GuyChoiceBalloon guyChoiceBalloon;
+
+		public GameObject andNowBalloon;
+		public GameObject tequilaBalloon;
 		
 		void Awake ()
 		{
@@ -295,24 +298,26 @@ public class Guy : MonoBehaviour
 		public void ShowAndNowMessage (Guy otherGuy, List<Guy> savedGuys)
 		{
 				StartCoroutine (ShowAndNowMessageCoroutine (otherGuy, savedGuys));
-				Speak ("And now?");
+				andNowBalloon.SetActive (true);
 		}
 
 		IEnumerator ShowAndNowMessageCoroutine (Guy otherGuy, List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				andNowBalloon.SetActive (false);
 				otherGuy.ShowTequilaMessage (savedGuys);
 		}
 
 		public void ShowTequilaMessage (List<Guy> savedGuys)
 		{
 				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));
-				Speak ("Tequila!");
+				tequilaBalloon.SetActive (true);
 		}
 
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				tequilaBalloon.SetActive (false);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
