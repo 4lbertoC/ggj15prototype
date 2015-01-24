@@ -50,8 +50,9 @@ public class Guy : MonoBehaviour
 		
 		void OnMouseDown ()
 		{
-				bool isPedro = gameState.isPedro (this);
-				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
+			if (gameState.IsReady()) {
+				bool isPedro = gameState.IsPedro (this);
+				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "- he's Pedro!" : ""));
 				if (isPedro) {
 						gameState.RemoveGuy (this);
 						ShutUp();
@@ -59,8 +60,10 @@ public class Guy : MonoBehaviour
 						gameState.ResetGame ();
 						transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 				} else {
-						Debug.Log ("Dead - New Game");
+						Debug.Log ("Massacre - New game");
+						gameState.EndGame (false);
 				}
+			}
 			
 		}
 		
