@@ -8,10 +8,8 @@ public class Guy : MonoBehaviour
 		public GameObject armPrefab;
 		private static int guyIdCumulative = 0;
 		private int guyId;
-
-		private GameState gameState = GameState.GetInstance();
-
-		private List<GameObject> arms = new List<GameObject>();
+		private GameState gameState = GameState.GetInstance ();
+		private List<GameObject> arms = new List<GameObject> ();
 
 		void Awake ()
 		{
@@ -33,6 +31,13 @@ public class Guy : MonoBehaviour
 		{
 				bool isPedro = gameState.SelectGuy (this);
 				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
+				if (isPedro) {
+						gameState.RemoveGuy (this);
+						gameState.ResetGame ();
+				} else {
+						Debug.Log ("Dead - New Game");
+				}
+			
 		}
 
 		public void AimAt (Guy targetGuy)
@@ -53,12 +58,13 @@ public class Guy : MonoBehaviour
 				return guyId;
 		}
 
-		public void ResetArms() {
-			foreach (GameObject arm in arms) {
-				Destroy(arm);
-			}
+		public void ResetArms ()
+		{
+				foreach (GameObject arm in arms) {
+						Destroy (arm);
+				}
 			
-			arms.Clear ();
+				arms.Clear ();
 		}
 
 }
