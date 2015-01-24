@@ -4,8 +4,9 @@ using System.Collections;
 public class Arm : MonoBehaviour
 {
 
-		public Transform target = null;
+		public Guy target = null;
 		public float speed = 0.1f; // in radians/sec
+		public GameObject bulletPrefab;
 
 		// Use this for initialization
 		void Start ()
@@ -19,7 +20,7 @@ public class Arm : MonoBehaviour
 			Vector3 targetDir;
 			float step = speed * Time.deltaTime;
 			if (target != null) {
-				targetDir = target.position - transform.position;
+				targetDir = target.transform.position - transform.position;
 				targetDir.z = 0;					
 			} else {
 				targetDir = new Vector3(0f, 0f, 100f);					
@@ -38,4 +39,17 @@ public class Arm : MonoBehaviour
 		{
 				gameObject.SetActive (true);
 		}
+
+		public void Shoot (float bulletSpeed)
+		{
+				if (target == null) {
+						return;
+				}
+				Vector3 deltaPosition = target.transform.position - transform.position;
+				GameObject bullet = Instantiate (bulletPrefab, 
+		             transform.position,
+		             new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
+		        bullet.GetComponent<Bullet>().target = this.target;
+				bullet.GetComponent<Bullet>().speed = bulletSpeed;
+	}
 }

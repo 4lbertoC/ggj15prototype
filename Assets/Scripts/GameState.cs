@@ -28,7 +28,8 @@ public class GameState
 			if (victory) {
 				Debug.Log ("IMPLEMENTA LA VITTORIA!!");				
 			} else {
-				Debug.Log ("IMPLEMENTA LA SCONFITTA!! GAME OVER, PIRLA");				
+				Debug.Log ("IMPLEMENTA LA SCONFITTA!! GAME OVER, PIRLA");
+				Game.LossSequence (currentPedro, currentGuys);
 			}
 		}
 

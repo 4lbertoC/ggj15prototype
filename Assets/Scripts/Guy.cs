@@ -13,6 +13,7 @@ public class Guy : MonoBehaviour
 		private List<Arm> arms = new List<Arm> ();
 	    private GameObject balloon;
 	    private int framesBeforeShuttingUp = -1;
+	    private bool dead = false;
 
 		void Awake ()
 		{
@@ -52,7 +53,7 @@ public class Guy : MonoBehaviour
 		{
 			if (gameState.IsReady()) {
 				bool isPedro = gameState.IsPedro (this);
-				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "- he's Pedro!" : ""));
+				Debug.Log ("Clicked " + guyId + (isPedro ? "- he's Pedro!" : ""));
 				if (isPedro) {
 						gameState.RemoveGuy (this);
 						ShutUp();
@@ -78,7 +79,7 @@ public class Guy : MonoBehaviour
 				if (arm == null) {
 					Debug.Log ("No arm!");
 				}
-				arm.target = targetGuy.transform;
+				arm.target = targetGuy;
 				arm.Show();
 		}
 		
@@ -119,5 +120,53 @@ public class Guy : MonoBehaviour
 				balloon.SetActive (false);
 			}
 			framesBeforeShuttingUp = -1;
+		}
+
+		public void ShootSlow ()
+		{
+			Shoot (10.0f);
+		}
+		
+		public void ShootFast ()
+		{
+			Shoot (40.0f);
+		}
+	
+		public void Shoot (float bulletSpeed)
+		{
+			foreach (Arm arm in arms) {
+				arm.Shoot(bulletSpeed);
+			}
+		}
+
+		IEnumerator DeathCoroutine ()
+		{
+			yield return new WaitForSeconds(0.1f);
+			gameObject.GetComponentInChildren<Body>().Hide();
+			foreach (Arm arm in arms) {
+				arm.Hide();
+			}
+			gameObject.GetComponentInChildren<Corpse>().Show();
+			dead = true;
+		}
+	
+		public void Die ()
+		{		
+			if (!dead) {			
+				StartCoroutine(DeathCoroutine());			
+				ShootFast();
+			}
+		}
+		
+		public void Raise ()
+		{
+			if (dead) {
+				gameObject.GetComponentInChildren<Corpse>().Hide();
+				gameObject.GetComponentInChildren<Body>().Show();			
+				foreach (Arm arm in arms) {
+					arm.Show();
+				}
+				dead = false;
+			}
 		}
 }

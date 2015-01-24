@@ -54,6 +54,13 @@ public class Game
 				return pedro;
 		}
 		
+		public static void LossSequence(Guy pedro, List<Guy> nonPedroes) {
+				pedro.ShootSlow();
+				foreach (Guy nonPedro in nonPedroes) {
+						// nonPedro.ShootFast();
+				}
+		}
+		
 		private static void PrintList (string message, List<Guy> guysToPrint)
 		{
 				string output = message + ": ";
