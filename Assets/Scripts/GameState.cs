@@ -7,6 +7,9 @@ public class GameState
 		public delegate void RemoveGuyAction();
 		public event RemoveGuyAction OnRemoveGuy;
 
+		public delegate void VictoryAction ();
+		public event VictoryAction OnVictory;
+
 		private List<Guy> currentGuys = new List<Guy> ();
 		private Guy currentPedro;
 		private static GameState _instance;
@@ -47,7 +50,7 @@ public class GameState
 		{
 			phase = GamePhase.Outro;
 			if (victory) {
-				Debug.Log ("IMPLEMENTA LA VITTORIA!!");				
+				Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
 			} else {
 				Game.LossSequence (currentPedro, currentGuys);
 			}

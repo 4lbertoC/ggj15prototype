@@ -33,6 +33,7 @@ public class Guy : MonoBehaviour
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
 		private GuyPhase phase = GuyPhase.Ready;
+		private SpriteRenderer spriteRenderer;
 		private GuyChoiceBalloon guyChoiceBalloon = new GuyChoiceBalloon ();
 	
 		void Awake ()
@@ -44,6 +45,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("2");
 				sentences.Add ("");
 				Debug.Log ("Guy #" + guyId + " was awaken");
+				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}
 
 		// Use this for initialization
@@ -66,7 +68,7 @@ public class Guy : MonoBehaviour
 								transform.localScale = (Vector3.Lerp (transform.localScale, HIDDEN_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						} else {
 								phase = GuyPhase.Gone;
-								GetComponentInChildren<SpriteRenderer> ().sprite = savedSprite;
+								spriteRenderer.sprite = savedSprite;
 								transitionTime = STARTING_TRANSITION_TIME;
 								transform.localPosition = SAVED_STARTING_POSITION + new Vector3 (SAVED_OFFSET * gameState.GetSavedGuysCount (), 0, 0);
 						}
@@ -106,6 +108,9 @@ public class Guy : MonoBehaviour
 		{
 				if (gameState.IsReady ()) {
 						guyChoiceBalloon.ShowChoice (this);
+						if (gameState.GetGuysCount () == 2) {
+								gameState.EndGame (true);
+						}
 				}
 			
 		}
@@ -165,8 +170,7 @@ public class Guy : MonoBehaviour
 		}
 		
 		public void Speak (string sentence)
-		{
-			
+		{	
 				if (balloon == null) {
 						balloon = Instantiate (balloonPrefab, 
 								this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f), 
@@ -260,5 +264,36 @@ public class Guy : MonoBehaviour
 		public GuyPhase GetPhase ()
 		{
 				return phase;
+		}
+
+		public void ShowAndNowMessage (Guy otherGuy, List<Guy> savedGuys)
+		{
+				StartCoroutine (ShowAndNowMessageCoroutine (otherGuy, savedGuys));
+				Speak ("And now?");
+		}
+
+		IEnumerator ShowAndNowMessageCoroutine (Guy otherGuy, List<Guy> savedGuys)
+		{
+				yield return new WaitForSeconds (2.0f);
+				otherGuy.ShowTequilaMessage (savedGuys);
+		}
+
+		public void ShowTequilaMessage (List<Guy> savedGuys)
+		{
+				StartCoroutine (ShowTequilaMessageCoroutine (savedGuys));
+				Speak ("Tequila!");
+		}
+
+		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
+		{
+				yield return new WaitForSeconds (2.0f);
+				foreach (Guy g in savedGuys) {
+						g.ShowVictorious ();
+				}
+		}
+
+		public void ShowVictorious ()
+		{
+				spriteRenderer.sprite = savedFiestaSprite;
 		}
 }
