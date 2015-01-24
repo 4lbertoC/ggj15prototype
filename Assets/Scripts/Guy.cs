@@ -6,9 +6,10 @@ public class Guy : MonoBehaviour
 {
 
 		public GameObject armPrefab;
-
 		private static int guyIdCumulative = 0;
 		private int guyId;
+
+		private GameState gameState = GameState.GetInstance();
 
 		void Awake ()
 		{
@@ -23,15 +24,21 @@ public class Guy : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-	
+			
+		}
+
+		void OnMouseDown ()
+		{
+				bool isPedro = gameState.SelectGuy (this);
+				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
 		}
 
 		public void AimAt (Guy targetGuy)
 		{
-			GameObject arm = Instantiate (armPrefab, this.GetPosition(), Quaternion.identity) as GameObject;
-			arm.transform.parent = this.transform;
+				GameObject arm = Instantiate (armPrefab, this.GetPosition (), Quaternion.identity) as GameObject;
+				arm.transform.parent = this.transform;
 
-		arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
+				arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
 		}
 
 		public Vector3 GetPosition ()
@@ -43,4 +50,5 @@ public class Guy : MonoBehaviour
 		{
 				return guyId;
 		}
+
 }

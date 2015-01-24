@@ -21,7 +21,7 @@ public class Game
 				return targets;
 		}
 
-		public static Dictionary<Guy, List<Guy>> CalculateAllTargets (List<Guy> guys)
+		public static Guy FindPedro (List<Guy> guys)
 		{
 				Dictionary<Guy, List<Guy>> allTargets = new Dictionary<Guy, List<Guy>> ();
 				List<Guy> guysClone = new List<Guy> (guys);
@@ -39,6 +39,6 @@ public class Game
 						allTargets.Add (g, ChooseTargets (g, sortedGuys));
 				}
 
-				return allTargets;
+				return freeGuy;
 		}
 }
