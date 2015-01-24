@@ -55,7 +55,16 @@ public class Game
 				return pedro;
 		}
 		
+		public static void SalvationFor(Guy runner) {
+				runner.ShutUp ();
+				runner.RemoveFromScene ();
+				runner.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
+		}
+		
 		public static void ShootingSpree(Guy protagonist, Guy shooter) {
+				if (shooter != protagonist) {
+						shooter.Chase(protagonist);
+				}
 				shooter.ShootButRememberThatGuyIsSpecial (protagonist);
 		}
 		
