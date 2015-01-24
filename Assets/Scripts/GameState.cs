@@ -21,6 +21,15 @@ public class GameState
 				TargetsChanging,
 				Outro
 		}
+		public GameOverType gameOverType = GameOverType.NotYetDefined;
+		public enum GameOverType
+		{
+			NotYetDefined,
+			HappyEnding,
+			BittersweetEnding,
+			Martyrdom,
+			WarDoesntWork
+		}
 
 		private List<Guy> savedGuys = new List<Guy> () ;
 
@@ -45,6 +54,19 @@ public class GameState
 		{
 				return (phase == GamePhase.Outro);
 		}
+
+		public void EndByShooting (Guy shooter)
+		{		
+				if (IsReady()) {
+					phase = GamePhase.Outro;
+					if (shooter == currentPedro) {
+							gameOverType = GameOverType.BittersweetEnding;
+					} else {
+							gameOverType = GameOverType.WarDoesntWork;
+					}
+					Game.ShootingSpree(shooter, shooter);
+				}
+		}
 	
 		public void EndGame (bool victory)
 		{
@@ -52,9 +74,21 @@ public class GameState
 			if (victory) {
 				Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
 			} else {
-				Game.LossSequence (currentPedro, currentGuys);
+				Debug.LogError ("MA CHE CAZZ...?!");
 			}
 		}
+		
+		public void EndByRunning (Guy runner)
+		{		
+				phase = GamePhase.Outro;
+				if (runner == currentPedro) {
+					Debug.LogError ("If Pedro runs, it should not be game over!");
+				} else {
+					gameOverType = GameOverType.Martyrdom;
+				}
+				// Trova chi spara a runner
+				// Game.ShootingSpree(runner, shooter);
+		}	
 
 		public bool IsPedro (Guy guy)
 		{

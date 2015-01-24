@@ -40,16 +40,17 @@ public class Arm : MonoBehaviour
 				gameObject.SetActive (true);
 		}
 
-		public void Shoot (float bulletSpeed)
+		public void Shoot (float bulletSpeed, Guy specialGuy)
 		{
 				if (target == null) {
 						return;
 				}
-				Vector3 deltaPosition = target.transform.position - transform.position;
-				GameObject bullet = Instantiate (bulletPrefab, 
-		             transform.position,
-		             new Quaternion(0f, 0f, 0f, 0f)) as GameObject;
-		        bullet.GetComponent<Bullet>().target = this.target;
-				bullet.GetComponent<Bullet>().speed = bulletSpeed;
+				Bullet bullet = (Instantiate (bulletPrefab, 
+	             		transform.position,
+                  		new Quaternion(0f, 0f, 0f, 0f)) as GameObject)
+                  		.GetComponent<Bullet>();
+		        bullet.target = this.target;
+				bullet.speed = bulletSpeed;
+				bullet.specialGuy = specialGuy;
 	}
 }
