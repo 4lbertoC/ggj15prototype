@@ -37,7 +37,7 @@ public class GameTimer : MonoBehaviour
 		private void ResetTimer ()
 		{
 				int guysCount = gameState.GetGuysCount ();
-				deadline = guysCount * 0.5f;
+				deadline = guysCount * 1.5f;
 				isEnded = false;
 		}
 
