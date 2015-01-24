@@ -29,10 +29,11 @@ public class Guy : MonoBehaviour
 
 		void OnMouseDown ()
 		{
-				bool isPedro = gameState.SelectGuy (this);
+				bool isPedro = gameState.isPedro (this);
 				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
 				if (isPedro) {
 						gameState.RemoveGuy (this);
+						Destroy(this.gameObject);
 						gameState.ResetGame ();
 				} else {
 						Debug.Log ("Dead - New Game");

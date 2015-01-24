@@ -15,12 +15,12 @@ public class GameState
 		currentPedro = Game.FindPedro(currentGuys);
 	}
 
-	public bool isPredro(Guy guy) {
+	public bool isPedro(Guy guy) {
 		return guy.Equals (currentPedro);
 	}
 
 	public void RemoveGuy(Guy guy){
-		currentGuys.Remove(guy)
+		currentGuys.Remove (guy);
 	}
 
 	public static GameState GetInstance() {
@@ -34,7 +34,7 @@ public class GameState
 	
 	public void ResetGame(){
 		currentPedro = Game.FindPedro(currentGuys);
-		Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count) 
+		Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
 	}
 }
 
