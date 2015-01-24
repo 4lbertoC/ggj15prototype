@@ -19,10 +19,9 @@ public class GameTimer : MonoBehaviour
 		{
 				if (deadline <= 0 && !isEnded) {
 						isEnded = true;
-						SendMessage ("OnTimerEnded");
-						deadline = 0;
-						timerText.text = deadline.ToString ("F2");
-				} else if (deadline > 0) {
+						gameState.ResetGame ();
+						OnGuysUpdate ();
+				} else if (deadline > 0 && gameState.phase.Equals(GameState.GamePhase.Ready)) {
 						deadline -= Time.deltaTime;
 						timerText.text = deadline.ToString ("F2");
 				}
@@ -31,7 +30,7 @@ public class GameTimer : MonoBehaviour
 		public void OnGuysUpdate ()
 		{
 				int guysCount = gameState.GetGuysCount ();
-				deadline = guysCount * 10;
+				deadline = guysCount * 1.5f;
 				isEnded = false;
 		}
 
