@@ -16,6 +16,8 @@ public class GameState
 				Outro
 		}
 
+		private List<Guy> savedGuys = new List<Guy> () ;
+
 		public void Init (List<Guy> guys)
 		{
 				currentGuys = guys;
@@ -53,9 +55,15 @@ public class GameState
 				return currentPedro;
 		}
 
+		public int GetSavedGuysCount ()
+		{
+				return savedGuys.Count;
+		}
+
 		public void RemoveGuy (Guy guy)
 		{
 				currentGuys.Remove (guy);
+				savedGuys.Add (guy);
 		}
 
 		public static GameState GetInstance ()
