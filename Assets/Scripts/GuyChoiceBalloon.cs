@@ -29,7 +29,7 @@ public class GuyChoiceBalloon : MonoBehaviour
 			guy.ShutUp ();
 			guy.RemoveFromScene ();
 			gameState.ResetGame ();
-			transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
+			guy.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 		} else {
 			Debug.Log ("Massacre - New game");
 			gameState.EndGame (false);

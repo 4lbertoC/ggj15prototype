@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GameTimer : MonoBehaviour
 {
-
 		public GUIText timerText;
 		private float deadline;
 		private bool isEnded = false;
