@@ -53,4 +53,8 @@ public class Main : MonoBehaviour
 		{
 	
 		}
+
+		void OnTimerEnded() {
+			Debug.Log ("Timer Ended!!!");
+		}
 }
