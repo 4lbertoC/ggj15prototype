@@ -11,6 +11,8 @@ public class Guy : MonoBehaviour
 
 		private GameState gameState = GameState.GetInstance();
 
+		private List<GameObject> arms = new List<GameObject>();
+
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
@@ -37,8 +39,8 @@ public class Guy : MonoBehaviour
 		{
 				GameObject arm = Instantiate (armPrefab, this.GetPosition (), Quaternion.identity) as GameObject;
 				arm.transform.parent = this.transform;
-
 				arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
+				arms.Add (arm);
 		}
 
 		public Vector3 GetPosition ()
@@ -49,6 +51,14 @@ public class Guy : MonoBehaviour
 		public int GetId ()
 		{
 				return guyId;
+		}
+
+		public void ResetArms() {
+			foreach (GameObject arm in arms) {
+				Destroy(arm);
+			}
+			
+			arms.Clear ();
 		}
 
 }

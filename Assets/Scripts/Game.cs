@@ -26,6 +26,10 @@ public class Game
 				Dictionary<Guy, List<Guy>> allTargets = new Dictionary<Guy, List<Guy>> ();
 				List<Guy> guysClone = new List<Guy> (guys);
 
+				foreach (Guy g in guys) {
+					g.ResetArms();
+				}
+
 				int freeGuyIndex = (int)Mathf.Floor (Random.value * guysClone.Count);
 				Guy freeGuy = guysClone [freeGuyIndex];
 				Debug.Log (freeGuy.GetId () + " is free!");
