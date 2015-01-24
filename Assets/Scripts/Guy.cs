@@ -82,6 +82,7 @@ public class Guy : MonoBehaviour
 				
 	           	if (gameState.IsPedro (this) && Input.GetKeyDown(KeyCode.P)) {
 						Debug.Log (GetId ()  + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+						PedroShoot ();
 	           	}
 		}
 
@@ -134,7 +135,7 @@ public class Guy : MonoBehaviour
 		}
 		
 		public void PedroShoot() {
-			
+				gameState.EndByShooting(this);
 		}
 		
 		public void NonPedroRun() {
@@ -236,7 +237,7 @@ public class Guy : MonoBehaviour
 						arm.Shoot (2.0f, null);				
 						specialGuy.BeScared();
 					} else {
-						arm.Shoot (15.0f, specialGuy);
+						arm.Shoot (30.0f, specialGuy);
 					}
 				}
 			}
