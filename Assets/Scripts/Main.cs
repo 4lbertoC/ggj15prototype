@@ -8,8 +8,7 @@ public class Main : MonoBehaviour
 		public GameObject guyPrefab;
 		private List<Vector3> positions = new List<Vector3> ();
 		private Quaternion defaultRotation = Quaternion.Euler (270, 0, 0);
-
-		private GameState gameState = GameState.GetInstance();
+		private GameState gameState = GameState.GetInstance ();
 
 		void Awake ()
 		{
@@ -36,15 +35,17 @@ public class Main : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
-			List<Guy> guys = new List<Guy>();
+				List<Guy> guys = new List<Guy> ();
 
 				for (int i = 0; i < positions.Count; i++) {
 						GameObject guyGO = (GameObject)Instantiate (guyPrefab, positions [i], defaultRotation);
+						guyGO.transform.parent = this.transform;
 						Guy guy = guyGO.GetComponent<Guy> ();
 						guys.Add (guy);
 				}
 
-				gameState.Init(guys);
+				gameState.Init (guys);
+				SendMessage ("OnGuysUpdate");
 
 		}
 
@@ -56,7 +57,8 @@ public class Main : MonoBehaviour
 	
 		}
 
-		void OnTimerEnded() {
-			Debug.Log ("Timer Ended!!!");
+		void OnTimerEnded ()
+		{
+				Debug.Log ("Timer Ended!!!");
 		}
 }

@@ -8,9 +8,11 @@ public class GameTimer : MonoBehaviour
 		private float deadline;
 		private bool isEnded = false;
 
+		private GameState gameState = GameState.GetInstance ();
+
 		void Awake ()
 		{
-				deadline = 3.0f;
+				
 		}
 	
 		// Update is called once per frame
@@ -27,9 +29,10 @@ public class GameTimer : MonoBehaviour
 				}
 		}
 
-		public void SetTimer (float time)
+		public void OnGuysUpdate ()
 		{
-				deadline = time;
+				int guysCount = gameState.GetGuysCount ();
+				deadline = guysCount * 10;
 				isEnded = false;
 		}
 

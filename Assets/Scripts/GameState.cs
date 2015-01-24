@@ -36,5 +36,9 @@ public class GameState
 		currentPedro = Game.FindPedro(currentGuys);
 		Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
 	}
+
+	public int GetGuysCount() {
+		return currentGuys.Count;
+	}
 }
 

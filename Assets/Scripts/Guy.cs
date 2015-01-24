@@ -40,8 +40,9 @@ public class Guy : MonoBehaviour
 				Debug.Log ("Clicked " + guyId + ". " + (isPedro ? "Is Pedro!" : ""));
 				if (isPedro) {
 						gameState.RemoveGuy (this);
-						Destroy(this.gameObject);
+						Destroy (this.gameObject);
 						gameState.ResetGame ();
+						transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 				} else {
 						Debug.Log ("Dead - New Game");
 				}
@@ -75,7 +76,8 @@ public class Guy : MonoBehaviour
 				arms.Clear ();
 		}
 		
-		public void Speak(string sentence) {
+		public void Speak (string sentence)
+		{
 			
 			if (balloon == null) {
 			balloon = Instantiate (balloonPrefab, 
