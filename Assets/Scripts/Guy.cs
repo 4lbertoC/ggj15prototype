@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 public class Guy : MonoBehaviour
 {
+		public enum GuyPhase
+		{
+				Ready,
+				Saved,
+				Gone,
+				AndNow,
+				Tequila,
+				Victorious
+		}
 
 		public GameObject armPrefab;
 		public GameObject balloonPrefab;
@@ -16,16 +25,15 @@ public class Guy : MonoBehaviour
 		private bool dead = false;
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
-		private bool isSaved = false;
 		private float transitionTime = 0;
-		private bool isGone = false;
 		private List<string> sentences = new List<string> ();
 		private readonly Vector3 HIDDEN_SCALE = new Vector3 (0, 1, 0);
 		private readonly Vector3 VISIBLE_SCALE = new Vector3 (1, 1, 1);
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
-
+		private GuyPhase phase = GuyPhase.Ready;
+	
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
@@ -51,19 +59,19 @@ public class Guy : MonoBehaviour
 						ShutUp ();
 				}
 
-				if (isSaved && !isGone) {
+				if (phase.Equals(GuyPhase.Saved)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, HIDDEN_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						} else {
-								isGone = true;
+								phase = GuyPhase.Gone;
 								GetComponentInChildren<SpriteRenderer> ().sprite = savedSprite;
 								transitionTime = STARTING_TRANSITION_TIME;
 								transform.localPosition = SAVED_STARTING_POSITION + new Vector3 (SAVED_OFFSET * gameState.GetSavedGuysCount (), 0, 0);
 						}
 				}
 
-				if (isGone) {
+				if (phase.Equals(GuyPhase.Gone)) {
 						if (transitionTime > 0) {
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
@@ -86,7 +94,7 @@ public class Guy : MonoBehaviour
 
 		private void RemoveFromScene ()
 		{
-				isSaved = true;
+				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
 				AimAtNobody (1);
@@ -98,7 +106,7 @@ public class Guy : MonoBehaviour
 				if (gameState.IsReady ()) {
 						bool isPedro = gameState.IsPedro (this);
 						Debug.Log ("Clicked " + guyId + (isPedro ? "- he's Pedro!" : ""));
-						if (isSaved) {
+						if (phase.Equals(GuyPhase.Saved)) {
 								return;
 						}
 						if (isPedro) {
@@ -115,19 +123,23 @@ public class Guy : MonoBehaviour
 			
 		}
 		
-		public void PedroRun() {
+		public void PedroRun ()
+		{
 		
 		}
 		
-		public void PedroShoot() {
+		public void PedroShoot ()
+		{
 			
 		}
 		
-		public void NonPedroRun() {
+		public void NonPedroRun ()
+		{
 			
 		}
 		
-		public void NonPedroShoot() {
+		public void NonPedroShoot ()
+		{
 			
 		}
 		
@@ -209,16 +221,17 @@ public class Guy : MonoBehaviour
 	
 		public void Shoot (float bulletSpeed)
 		{
-			foreach (Arm arm in arms) {
-				arm.Shoot(bulletSpeed);
-			}
-			StartCoroutine(IncompleteMassacreCoroutine());
+				foreach (Arm arm in arms) {
+						arm.Shoot (bulletSpeed);
+				}
+				StartCoroutine (IncompleteMassacreCoroutine ());
 		}
 		
-		IEnumerator IncompleteMassacreCoroutine () {
-			yield return new WaitForSeconds(8.0f);
-			Debug.Log ("Check if coup de grace is needed");
-			Game.LossSequenceCoupDeGrace();
+		IEnumerator IncompleteMassacreCoroutine ()
+		{
+				yield return new WaitForSeconds (8.0f);
+				Debug.Log ("Check if coup de grace is needed");
+				Game.LossSequenceCoupDeGrace ();
 		}
 
 		IEnumerator DeathCoroutine ()
@@ -234,26 +247,26 @@ public class Guy : MonoBehaviour
 	
 		public void Die ()
 		{
-			if (IsAlive()) {			
-				StartCoroutine(DeathCoroutine());			
-				ShootFast();
-			}
+				if (IsAlive ()) {			
+						StartCoroutine (DeathCoroutine ());			
+						ShootFast ();
+				}
 		}
 		
 		public void Raise ()
 		{
-			if (!IsAlive()) {
-				gameObject.GetComponentInChildren<Corpse>().Hide();
-				gameObject.GetComponentInChildren<Body>().Show();			
-				foreach (Arm arm in arms) {
-					arm.Show();
+				if (!IsAlive ()) {
+						gameObject.GetComponentInChildren<Corpse> ().Hide ();
+						gameObject.GetComponentInChildren<Body> ().Show ();			
+						foreach (Arm arm in arms) {
+								arm.Show ();
+						}
+						dead = false;
 				}
-				dead = false;
-			}
 		}
 
 		public bool IsAlive ()
 		{
-			return !dead;
+				return !dead;
 		}
 }
