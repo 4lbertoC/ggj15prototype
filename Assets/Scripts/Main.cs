@@ -13,11 +13,19 @@ public class Main : MonoBehaviour
 
 		void Awake ()
 		{
-				positions.Add (new Vector3 (-5, -2, 0));
-				positions.Add (new Vector3 (-3, 3, 0));
-				positions.Add (new Vector3 (5, -2, 0));
-				positions.Add (new Vector3 (3, 3, 0));
-				positions.Add (new Vector3 (0, -4, 0));
+//				positions.Add (new Vector3 (-5, -2, 0));
+//				positions.Add (new Vector3 (-3, 3, 0));
+//				positions.Add (new Vector3 (5, -2, 0));
+//				positions.Add (new Vector3 (3, 3, 0));
+//				positions.Add (new Vector3 (0, -4, 0));
+				positions.Add (new Vector3 (-3.36f, 3.98f, 0.68f));
+				positions.Add (new Vector3 (2.65f, 3.78f, 2.62f));
+				positions.Add (new Vector3 (-6.26f, 0.5f, -0.23f));
+				positions.Add (new Vector3 (-0.61f, 0.53f, 0.98f));
+				positions.Add (new Vector3 (4.62f, 2.14f, 0f));
+				positions.Add (new Vector3 (-2.52f, -3.06f, -1.785f));
+				positions.Add (new Vector3 (1.25f, -3.2f, -4.3f));
+				positions.Add (new Vector3 (5.26f, -1.69f, -1.06f));
 		}
 
 		private void PrintCombinations (Dictionary<Guy, List<Guy>> allTargets)

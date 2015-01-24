@@ -12,13 +12,13 @@ public class Game
 		{
 				List<Guy> targets = new List<Guy> ();
 				for (int armIndex = 0; armIndex < ARMS_COUNT; armIndex++) {
-					if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
-						Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
-						targets.Add (targetGuy);
-						shootingGuy.AimAt (armIndex, targetGuy);
-					} else {
-						shootingGuy.AimAtNobody (armIndex);
-					}
+						if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
+								Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
+								targets.Add (targetGuy);
+								shootingGuy.AimAt (armIndex, targetGuy);
+						} else {
+								shootingGuy.AimAtNobody (armIndex);
+						}
 				}
 				return targets;
 		}
@@ -28,16 +28,16 @@ public class Game
 				Dictionary<Guy, List<Guy>> allTargets = new Dictionary<Guy, List<Guy>> ();
 				List<Guy> nonPedroes = new List<Guy> (guys);
 				
-				PrintList("All", nonPedroes);
+				PrintList ("All", nonPedroes);
 	
 				int pedroIndex = (int)Mathf.Floor (Random.value * guys.Count);
 				Guy pedro = nonPedroes [pedroIndex];
 				// pedro.Speak("soy Pedro");
 				Debug.Log (pedro.GetId () + " is Pedro!");
 				nonPedroes.Remove (pedro);
-				PrintList("All without Pedro", nonPedroes);
+				PrintList ("All without Pedro", nonPedroes);
 				
-				List<Guy> shuffledNonPedroes = new List<Guy>();
+				List<Guy> shuffledNonPedroes = new List<Guy> ();
 				while (nonPedroes.Count > 0) {
 						
 						int index = (int)Mathf.Floor (Random.value * nonPedroes.Count);
@@ -45,19 +45,20 @@ public class Game
 						nonPedroes.RemoveAt (index);
 				}
 				
-				PrintList("All without Pedro shuffled", shuffledNonPedroes);
+				PrintList ("All without Pedro shuffled", shuffledNonPedroes);
 				PriorityQueue targetsQueue = new PriorityQueue (shuffledNonPedroes);		
 				allTargets.Add (pedro, ChooseTargets (pedro, targetsQueue));
 				foreach (Guy nonPedro in shuffledNonPedroes) {
-					allTargets.Add (nonPedro, ChooseTargets (nonPedro, targetsQueue));
+						allTargets.Add (nonPedro, ChooseTargets (nonPedro, targetsQueue));
 				}
 				return pedro;
 		}
 		
-		private static void PrintList(string message, List<Guy> guysToPrint) {
+		private static void PrintList (string message, List<Guy> guysToPrint)
+		{
 				string output = message + ": ";
 				foreach (Guy guy in guysToPrint) {								
-						output += guy.GetId() + " ";
+						output += guy.GetId () + " ";
 				}
 				Debug.Log (output);
 		}

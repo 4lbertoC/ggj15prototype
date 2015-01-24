@@ -7,7 +7,6 @@ public class GameTimer : MonoBehaviour
 		public GUIText timerText;
 		private float deadline;
 		private bool isEnded = false;
-
 		private GameState gameState = GameState.GetInstance ();
 
 		void Awake ()

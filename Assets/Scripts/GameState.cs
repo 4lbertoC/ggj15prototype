@@ -4,41 +4,45 @@ using System.Collections.Generic;
 
 public class GameState
 {
-	private List<Guy> currentGuys = new List<Guy> ();
+		private List<Guy> currentGuys = new List<Guy> ();
+		private Guy currentPedro;
+		private static GameState _instance;
 
-	private Guy currentPedro;
-
-	private static GameState _instance;
-
-	public void Init(List<Guy> guys) {
-		currentGuys = guys;
-		currentPedro = Game.FindPedro(currentGuys);
-	}
-
-	public bool isPedro(Guy guy) {
-		return guy.Equals (currentPedro);
-	}
-
-	public void RemoveGuy(Guy guy){
-		currentGuys.Remove (guy);
-	}
-
-	public static GameState GetInstance() {
-
-		if(_instance == null) {
-			_instance = new GameState();
+		public void Init (List<Guy> guys)
+		{
+				currentGuys = guys;
+				currentPedro = Game.FindPedro (currentGuys);
 		}
 
-		return _instance;
-	}
-	
-	public void ResetGame(){
-		currentPedro = Game.FindPedro(currentGuys);
-		Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
-	}
+		public bool isPedro (Guy guy)
+		{
+				return guy.Equals (currentPedro);
+		}
 
-	public int GetGuysCount() {
-		return currentGuys.Count;
-	}
+		public void RemoveGuy (Guy guy)
+		{
+				currentGuys.Remove (guy);
+		}
+
+		public static GameState GetInstance ()
+		{
+
+				if (_instance == null) {
+						_instance = new GameState ();
+				}
+
+				return _instance;
+		}
+	
+		public void ResetGame ()
+		{
+				currentPedro = Game.FindPedro (currentGuys);
+				Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
+		}
+
+		public int GetGuysCount ()
+		{
+				return currentGuys.Count;
+		}
 }
 
