@@ -17,6 +17,7 @@ public class Guy : MonoBehaviour
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
+				Debug.Log("Guy #" + guyId + " was awaken");
 		}
 
 		// Use this for initialization
@@ -36,13 +37,14 @@ public class Guy : MonoBehaviour
 	
 
 		private void SpawnArmsIfNecessary() {
-			for (int armIndex = arms.Count; armIndex < Game.ARMS_COUNT; armIndex++) {			
-				GameObject arm = Instantiate (armPrefab, this.GetPosition (), Quaternion.identity) as GameObject;
-				arm.transform.parent = this.transform;						
-				// arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
-				arms.Add (arm.GetComponent<Arm>());
-				arm.SetActive(false);
-				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " spawned");
+			if (arms.Count == 0) {
+				for (int armIndex = 0; armIndex < Game.ARMS_COUNT; armIndex++) {			
+					GameObject arm = Instantiate (armPrefab, this.GetPosition (), Quaternion.identity) as GameObject;
+					arm.transform.parent = this.transform;						
+					// arm.transform.rotation = Quaternion.LookRotation (targetGuy.GetPosition () - this.GetPosition ());
+					arms.Add (arm.GetComponent<Arm>());
+					Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " spawned");
+				}
 			}
 		}
 		
@@ -70,13 +72,17 @@ public class Guy : MonoBehaviour
 		public void AimAt (int armIndex, Guy targetGuy) {
 				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " aiming @ " + targetGuy.GetId());
 				Arm arm = GetArm (armIndex);
-				arm.target = targetGuy.transform;		
+				if (arm == null) {
+					Debug.Log ("No arm!");
+				}
+				arm.target = targetGuy.transform;
 				arm.Show();
 		}
 		
 		public void AimAtNobody (int armIndex) {
 			Debug.Log ("Arm #" + armIndex + " of guy #" + GetId() + " aiming @ nobody");
 			Arm arm = GetArm (armIndex);
+			
 			arm.target = this.transform;
 			// arm.Hide();
 		}
