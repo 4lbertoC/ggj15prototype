@@ -37,8 +37,7 @@ public class Guy : MonoBehaviour
 		private const float AGONY_TIME = 0.1f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
-		public GuyChoiceBalloon guyChoiceBalloon;
-
+		public GuyChoiceButton guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
 		
@@ -84,26 +83,26 @@ public class Guy : MonoBehaviour
 								transitionTime -= Time.deltaTime;
 								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
 						}
-				} else if(phase.Equals (GuyPhase.Victorious)) {
-					if((Mathf.Floor(Time.time * 5) % 2) == 0) {
-						spriteRenderer.sprite = savedFiestaSprite;
-					} else {
-						spriteRenderer.sprite = savedSprite;
-					}
+				} else if (phase.Equals (GuyPhase.Victorious)) {
+						if ((Mathf.Floor (Time.time * 5) % 2) == 0) {
+								spriteRenderer.sprite = savedFiestaSprite;
+						} else {
+								spriteRenderer.sprite = savedSprite;
+						}
 				}
 				
 				// DEBUG KEYS: RIMUOVILEEE
-				if (!gameState.IsPedro (this) && Input.GetKeyDown(KeyCode.Z)) {
+				if (!gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.Z)) {
 						if (GetId () == 0) {
-							Debug.Log (GetId ()  + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+								Debug.Log (GetId () + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
 						}
-						NonPedroShoot ();
+						OnNonPedroShoot ();
 				}
 				
-	           	if (gameState.IsPedro (this) && Input.GetKeyDown(KeyCode.P)) {
-						Debug.Log (GetId ()  + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
-						PedroShoot ();
-	           	}
+				if (gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.P)) {
+						Debug.Log (GetId () + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+						OnPedroShoot ();
+				}
 		}
 
 		private void SpawnArmsIfNecessary ()
@@ -126,7 +125,7 @@ public class Guy : MonoBehaviour
 				AimAtNobody (0);
 				AimAtNobody (1);
 				//				Destroy (this.gameObject);
-		}		
+		}
 		
 		void OnMouseDown ()
 		{
@@ -136,24 +135,26 @@ public class Guy : MonoBehaviour
 			
 		}
 		
-		public void PedroRun ()
+		public void OnPedroRun ()
 		{	
-				gameState.EndByRunning(this);
+				gameState.EndByRunning (this);
 			
 		}
 		
-		public void PedroShoot() {
-				gameState.EndByShooting(this);
-		}
-		
-		public void NonPedroRun ()
+		public void OnPedroShoot ()
 		{
-				gameState.EndByRunning(this);
+				gameState.EndByShooting (this);
 		}
 		
-		public void NonPedroShoot() {
+		public void OnNonPedroRun ()
+		{
+				gameState.EndByRunning (this);
+		}
+		
+		public void OnNonPedroShoot ()
+		{
 				Debug.Log ("NON-PEDRO SHOOT!");
-				gameState.EndByShooting(this);
+				gameState.EndByShooting (this);
 		}
 		
 		private Arm GetArm (int armIndex)
@@ -183,7 +184,7 @@ public class Guy : MonoBehaviour
 		public bool IsAimingAt (Guy candidateTarget)
 		{
 				foreach (Arm arm in arms) {
-						if (arm.target == candidateTarget)  {
+						if (arm.target == candidateTarget) {
 								return true;
 						}
 				}
@@ -239,34 +240,35 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
-			if (!chased) {
-				scared = true;
-				for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-					AimAtNobody(armIndex);
+				if (!chased) {
+						scared = true;
+						for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+								AimAtNobody (armIndex);
+						}
+						StartCoroutine (ScreamOhNoCoroutine ());
 				}
-				StartCoroutine(ScreamOhNoCoroutine());
-			}
 		}
 		
-		IEnumerator ScreamOhNoCoroutine() {
-			yield return new WaitForSeconds (0.5f);	
-			Speak ("Oh...");
-			yield return new WaitForSeconds (1.0f);	
-			Speak ("Nooo!");
+		IEnumerator ScreamOhNoCoroutine ()
+		{
+				yield return new WaitForSeconds (0.5f);	
+				Speak ("Oh...");
+				yield return new WaitForSeconds (1.0f);	
+				Speak ("Nooo!");
 		}
 		
 		public void ShootButRememberThatGuyIsSpecial (Guy specialGuy)
 		{
-			foreach (Arm arm in arms) {
-			    if (arm.target != null) {
-					if (arm.target == specialGuy) {
-						arm.Shoot (2.0f, null);				
-						specialGuy.BeScared();
-					} else {
-						arm.Shoot (30.0f, specialGuy);
-					}
+				foreach (Arm arm in arms) {
+						if (arm.target != null) {
+								if (arm.target == specialGuy) {
+										arm.Shoot (2.0f, null);				
+										specialGuy.BeScared ();
+								} else {
+										arm.Shoot (30.0f, specialGuy);
+								}
+						}
 				}
-			}
 		}
 
 		IEnumerator DeathCoroutine ()
@@ -279,16 +281,16 @@ public class Guy : MonoBehaviour
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
 				dead = true;
 				if (scared) {
-					Game.LossSequenceCoupDeGrace();
+						Game.LossSequenceCoupDeGrace ();
 				}
 		}
 	
 		public void Die (Guy specialGuy)
 		{
-			if (IsAlive()) {			
-				StartCoroutine(DeathCoroutine());			
-				ShootButRememberThatGuyIsSpecial(specialGuy);
-			}
+				if (IsAlive ()) {			
+						StartCoroutine (DeathCoroutine ());			
+						ShootButRememberThatGuyIsSpecial (specialGuy);
+				}
 		}
 		
 		public void Raise ()
@@ -341,6 +343,6 @@ public class Guy : MonoBehaviour
 
 		public void ShowVictorious ()
 		{
-			phase = GuyPhase.Victorious;
+				phase = GuyPhase.Victorious;
 		}
 }
