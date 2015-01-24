@@ -145,5 +145,13 @@ public class GameState
 		{
 				return currentGuys.Count;
 		}
+
+		public void MakeGuysSpeak() {
+			foreach (Guy g in currentGuys) {
+				if (!g.Equals (currentPedro) && Random.value > 0.5f) {
+					g.Speak();
+				}
+			}
+		}
 }
 

@@ -51,9 +51,6 @@ public class Game
 				allTargets.Add (pedro, ChooseTargets (pedro, targetsQueue));
 				foreach (Guy nonPedro in shuffledNonPedroes) {
 						allTargets.Add (nonPedro, ChooseTargets (nonPedro, targetsQueue));
-						if (gameState.IsIntro ()) {
-								nonPedro.Speak ();
-						}
 				}
 				return pedro;
 		}

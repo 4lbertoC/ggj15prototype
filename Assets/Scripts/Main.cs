@@ -7,6 +7,7 @@ public class Main : MonoBehaviour
 
 		public GameObject guyPrefab;
 		public GameObject housePrefab;
+		public GameObject foreground;
 		private List<Vector3> positions = new List<Vector3> ();
 		private Quaternion defaultRotation = Quaternion.Euler (270, 0, 0);
 		private GameState gameState = GameState.GetInstance ();
@@ -58,8 +59,6 @@ public class Main : MonoBehaviour
 				SendMessage ("OnGuysUpdate");
 
 		}
-
-
 
 		// Update is called once per frame
 		void Update ()
