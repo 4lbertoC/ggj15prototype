@@ -124,7 +124,7 @@ public class Guy : MonoBehaviour
 
 		public void ShootSlow ()
 		{
-			Shoot (10.0f);
+			Shoot (5.0f);
 		}
 		
 		public void ShootFast ()
