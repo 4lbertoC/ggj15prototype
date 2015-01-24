@@ -7,6 +7,8 @@ public class Guy : MonoBehaviour
 
 		public GameObject armPrefab;
 		public GameObject balloonPrefab;
+		public Sprite savedSprite;
+		public Sprite savedFiestaSprite;
 		private static int guyIdCumulative = 0;
 		private int guyId;
 		private GameState gameState = GameState.GetInstance ();
@@ -14,9 +16,13 @@ public class Guy : MonoBehaviour
 		private GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
 		private bool isSaved = false;
-		private int goingAwayTime = 0;
+		private float transitionTime = 0;
 		private bool isGone = false;
-		private Vector3 hiddenScale = new Vector3 (0, 1, 0);
+		private readonly Vector3 HIDDEN_SCALE = new Vector3 (0, 1, 0);
+		private readonly Vector3 VISIBLE_SCALE = new Vector3 (1, 1, 1);
+		private readonly float STARTING_TRANSITION_TIME = 0.5f;
+		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
+		private readonly float SAVED_OFFSET = 0.8f;
 
 		void Awake ()
 		{
@@ -38,8 +44,23 @@ public class Guy : MonoBehaviour
 						ShutUp ();
 				}
 
-				if (goingAwayTime > 0) {
-						transform.localScale = (Vector3.Lerp (transform.localScale, hiddenScale, 1));
+				if (isSaved && !isGone) {
+						if (transitionTime > 0) {
+								transitionTime -= Time.deltaTime;
+								transform.localScale = (Vector3.Lerp (transform.localScale, HIDDEN_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
+						} else {
+								isGone = true;
+								GetComponentInChildren<SpriteRenderer> ().sprite = savedSprite;
+								transitionTime = STARTING_TRANSITION_TIME;
+								transform.localPosition = SAVED_STARTING_POSITION + new Vector3 (SAVED_OFFSET * gameState.GetSavedGuysCount (), 0, 0);
+						}
+				}
+
+				if (isGone) {
+						if (transitionTime > 0) {
+								transitionTime -= Time.deltaTime;
+								transform.localScale = (Vector3.Lerp (transform.localScale, VISIBLE_SCALE, (STARTING_TRANSITION_TIME - transitionTime) / STARTING_TRANSITION_TIME));
+						}
 				}
 		}
 
@@ -58,9 +79,11 @@ public class Guy : MonoBehaviour
 
 		private void RemoveFromScene ()
 		{
-//				isSaved = true;
-				
-				Destroy (this.gameObject);
+				isSaved = true;
+				transitionTime = STARTING_TRANSITION_TIME;
+				AimAtNobody (0);
+				AimAtNobody (1);
+				//				Destroy (this.gameObject);
 		}
 		
 		void OnMouseDown ()
