@@ -40,6 +40,8 @@ public class Guy : MonoBehaviour
 		public GuyChoiceBalloon guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
+
+	private AudioPlayer audioPlayer;
 		
 		void Awake ()
 		{
@@ -55,6 +57,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("?!");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
+		audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
 
 		// Use this for initialization
@@ -354,7 +357,7 @@ public class Guy : MonoBehaviour
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
-				GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ().PlaySound ("Victory");
+				audioPlayer.PlaySound ("Victory");
 				tequilaBalloon.SetActive (true);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
