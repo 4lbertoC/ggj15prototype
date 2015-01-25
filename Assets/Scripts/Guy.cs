@@ -41,8 +41,7 @@ public class Guy : MonoBehaviour
 		public GuyChoiceBalloon guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
-
-	private AudioPlayer audioPlayer;
+		private AudioPlayer audioPlayer;
 		
 		void Awake ()
 		{
@@ -58,7 +57,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("?!");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
-		audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
+				audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
 
 		// Use this for initialization
@@ -124,20 +123,21 @@ public class Guy : MonoBehaviour
 						}
 				}
 				foreach (Arm arm in arms) {
-						arm.Show();
+						arm.Show ();
 				}
 		}
 
 		public void RemoveFromScene ()
 		{
+				audioPlayer.PlaySound ("Escape");
 				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
 				AimAtNobody (1);
 				foreach (Arm arm in arms) {
-					arm.Hide();
+						arm.Hide ();
 				}
-		}		
+		}
 		
 		void OnMouseDown ()
 		{
@@ -189,16 +189,17 @@ public class Guy : MonoBehaviour
 
 		public void WaitAndSuddenlyAimAt (int armIndex, Guy targetGuy)
 		{
-				StartCoroutine(AfterRandomPauseAimCoroutine(armIndex, targetGuy));
+				StartCoroutine (AfterRandomPauseAimCoroutine (armIndex, targetGuy));
 		}
 		
-       	IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy) {		
+		IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy)
+		{		
 				yield return new WaitForSeconds (Random.value * 3);
 				if (Random.value > 0.7) {
-					RandomSpeak ();
+						RandomSpeak ();
 				}
-				AimAt(armIndex, targetGuy);
-       	}
+				AimAt (armIndex, targetGuy);
+		}
 		
 		public void AimAtNobody (int armIndex)
 		{
@@ -264,15 +265,15 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
-			if (!scared) {
-				scared = true;
-				if (!chased) {
-					for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-						AimAtNobody(armIndex);
-					}	
+				if (!scared) {
+						scared = true;
+						if (!chased) {
+								for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+										AimAtNobody (armIndex);
+								}	
+						}
+						StartCoroutine (ScreamOhNoCoroutine ());
 				}
-				StartCoroutine(ScreamOhNoCoroutine());
-			}
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
@@ -287,6 +288,7 @@ public class Guy : MonoBehaviour
 		{
 				foreach (Arm arm in arms) {
 						if (arm.target != null) {
+								audioPlayer.PlaySound ("Gun");
 								if (arm.target == specialGuy) {
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
@@ -307,6 +309,7 @@ public class Guy : MonoBehaviour
 						arm.Hide ();
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
+				audioPlayer.PlaySound ("Dead");
 				dead = true;
 				if (scared) {			
 						yield return new WaitForSeconds (3.0f);
