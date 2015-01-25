@@ -10,6 +10,7 @@ public class AudioPlayer : MonoBehaviour
 		public List<AudioSource> escapeSounds;
 		public List<AudioSource> deadSounds;
 		public List<AudioSource> gunSounds;
+		public List<AudioSource> voiceSounds;
 		public List<AudioSource> musics;
 		private Dictionary<string, List<AudioSource>> audioSources = new Dictionary<string, List<AudioSource>> ();
 		private int playingMusicId = 0;
@@ -21,6 +22,7 @@ public class AudioPlayer : MonoBehaviour
 				audioSources.Add ("Escape", escapeSounds);
 				audioSources.Add ("Dead", deadSounds);
 				audioSources.Add ("Gun", gunSounds);
+				audioSources.Add ("Voice", voiceSounds);
 		}
 	
 		public void PlaySound (string id)
