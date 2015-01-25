@@ -32,7 +32,7 @@ public class Guy : MonoBehaviour
 		private readonly Vector3 HIDDEN_SCALE = new Vector3 (0, 1, 0);
 		private readonly Vector3 VISIBLE_SCALE = new Vector3 (1, 1, 1);
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
-		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
+		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 6.08f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
 		private const float REVENGE_TIME = 0.2f;
 		private const float AGONY_TIME = 0.2f;
@@ -46,7 +46,6 @@ public class Guy : MonoBehaviour
 		public Sprite balloonOh;
 		public Sprite balloonNoo;
 		public Sprite balloonStop;
-		
 		private List<float> breathSteps = new List<float>();
 		private int breathPoint = 0;
 		private const int framesPerBreathSteps = 50;
@@ -317,6 +316,8 @@ public class Guy : MonoBehaviour
 						Game.LossSequenceCoupDeGrace ();
 				}
 		}
+
+		
 	
 		public void Die (Guy specialGuy)
 		{
