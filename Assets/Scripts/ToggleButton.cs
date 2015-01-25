@@ -11,4 +11,9 @@ public class ToggleButton : MonoBehaviour {
 		toggledItem.SetActive (!isShow);
 		isShow = !isShow;
 	}
+
+	public void TurnOff() {
+		isShow = false;
+		toggledItem.SetActive (false);
+	}
 }

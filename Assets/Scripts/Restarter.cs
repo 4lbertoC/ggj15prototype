@@ -4,17 +4,21 @@ using System.Collections;
 public class Restarter : MonoBehaviour {
 
 	public Main main;
+	public ToggleButton credits;
+	public ToggleButton howTo;
 
 	void OnMouseDown() {
 		main.Restart ();
 	}
 
 	public void Show() {
-		this.gameObject.transform.localPosition = new Vector3 (0, 0, 0);
+		howTo.TurnOff ();
+		credits.TurnOff ();
+		this.gameObject.transform.parent.localPosition = new Vector3 (0, 0, 0);
 	}
 
 	public void Hide() {
-		this.gameObject.transform.localPosition = new Vector3 (0, 15.7f, 0);
+		this.gameObject.transform.parent.localPosition = new Vector3 (0, 15.7f, 0);
 		GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ().StopSound ("Victory");
 	}
 }
