@@ -49,7 +49,10 @@ public class Guy : MonoBehaviour
 				sentences.Add ("...!");
 				sentences.Add ("Don't");
 				sentences.Add ("WTF?");		
-				sentences.Add ("Surr\nender");
+				sentences.Add ("Give up");	
+				sentences.Add ("Back down");
+				sentences.Add ("Run");
+				sentences.Add ("?!");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}
@@ -116,6 +119,9 @@ public class Guy : MonoBehaviour
 								// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " spawned");
 						}
 				}
+				foreach (Arm arm in arms) {
+						arm.Show();
+				}
 		}
 
 		public void RemoveFromScene ()
@@ -124,8 +130,10 @@ public class Guy : MonoBehaviour
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
 				AimAtNobody (1);
-				//				Destroy (this.gameObject);
-		}
+				foreach (Arm arm in arms) {
+					arm.Hide();
+				}
+		}		
 		
 		void OnMouseDown ()
 		{
@@ -179,6 +187,19 @@ public class Guy : MonoBehaviour
 				arm.target = targetGuy;
 				arm.Show ();
 		}
+
+		public void WaitAndSuddenlyAimAt (int armIndex, Guy targetGuy)
+		{
+				StartCoroutine(AfterRandomPauseAimCoroutine(armIndex, targetGuy));
+		}
+		
+       	IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy) {		
+				yield return new WaitForSeconds (Random.value * 3);
+				if (Random.value > 0.7) {
+					RandomSpeak ();
+				}
+				AimAt(armIndex, targetGuy);
+       	}
 		
 		public void AimAtNobody (int armIndex)
 		{
@@ -223,11 +244,9 @@ public class Guy : MonoBehaviour
 		
 		public void RandomSpeak ()
 		{
-				int random = (int)Mathf.Floor (Random.Range (0, sentences.Count + 1));
+				int random = Random.Range (0, sentences.Count);
 				Debug.Log ("Random speak " + random);
-				if (random != 0) {
-						this.Speak (sentences [random - 1]);
-				}
+				this.Speak (sentences [random]);
 		}
 
 		public void ShutUp ()
@@ -347,7 +366,7 @@ public class Guy : MonoBehaviour
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
-				StartCoroutine (ShowPlayButtonCoroutine ());
+				StartCoroutine (ShowPlayButtonCoroutine (2.0f));
 		}
 
 		public void ShowVictorious ()
@@ -355,14 +374,18 @@ public class Guy : MonoBehaviour
 				phase = GuyPhase.Victorious;
 		}
 
-		IEnumerator ShowPlayButtonCoroutine ()
+		IEnumerator ShowPlayButtonCoroutine (float seconds)
 		{
-				yield return new WaitForSeconds (2.0f);
+				yield return new WaitForSeconds (seconds);
 				GameObject.FindGameObjectWithTag ("PlayButton").GetComponent<Restarter> ().Show ();
 		}
 
 		public void Destroy ()
 		{
 				Destroy (this.gameObject);
+		}
+
+		public void ShowPlayButton() {
+			StartCoroutine (ShowPlayButtonCoroutine (5.0f));
 		}
 }

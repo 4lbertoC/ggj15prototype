@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 public class GameState
 {
-		public delegate void RemoveGuyAction ();
-
-		public event RemoveGuyAction OnRemoveGuy;
+		public delegate void NewStandoffAction();
+		public event NewStandoffAction OnNewStandoff;
 
 		public delegate void VictoryAction ();
 		// public event VictoryAction OnVictory;
@@ -20,6 +19,7 @@ public class GameState
 				Intro,
 				Ready,
 				TargetsChanging,
+				GuyEscaping,
 				Outro
 		}
 		public GameOverType gameOverType = GameOverType.NotYetDefined;
@@ -72,7 +72,8 @@ public class GameState
 		public void ProceedByRunning (Guy runner)
 		{		
 				
-				if (runner == currentPedro) {
+				if (runner == currentPedro) {							
+						phase = GamePhase.GuyEscaping;
 						RemoveGuy (runner);
 						Game.SalvationFor (runner);
 						if (currentGuys.Count == 2) {					
@@ -88,6 +89,7 @@ public class GameState
 						foreach (Guy guy in currentGuys) {
 								if (guy.IsAimingAt (runner)) {
 										Game.ShootingSpree (runner, guy);
+										break;
 								}
 						}
 				}
@@ -123,7 +125,6 @@ public class GameState
 		{
 				currentGuys.Remove (guy);
 				savedGuys.Add (guy);
-				OnRemoveGuy ();
 		}
 
 		public static GameState GetInstance ()
@@ -138,8 +139,10 @@ public class GameState
 	
 		public void ResetGame ()
 		{
-				phase = GamePhase.TargetsChanging;
+				phase = GamePhase.TargetsChanging;	
 				currentPedro = Game.FindPedro (currentGuys);
+				currentPedro.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
+				OnNewStandoff ();
 				Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
 				phase = GamePhase.Ready;
 		}

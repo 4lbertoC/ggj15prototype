@@ -15,7 +15,11 @@ public class Game
 						if (armIndex == 0 || Random.value < LIKELIHOOD_OF_MORE_THAN_ONE_ARM) {
 								Guy targetGuy = otherGuys.GetAndTouchHeadButNot (shootingGuy) as Guy;
 								targets.Add (targetGuy);
-								shootingGuy.AimAt (armIndex, targetGuy);
+								if (GameState.GetInstance().IsIntro()) {
+									shootingGuy.WaitAndSuddenlyAimAt (armIndex, targetGuy);
+								} else {
+									shootingGuy.AimAt (armIndex, targetGuy);
+								}
 						} else {
 								shootingGuy.AimAtNobody (armIndex);
 						}
@@ -28,7 +32,6 @@ public class Game
 
 				Dictionary<Guy, List<Guy>> allTargets = new Dictionary<Guy, List<Guy>> ();
 				List<Guy> nonPedroes = new List<Guy> (guys);
-				GameState gameState = GameState.GetInstance ();
 				PrintList ("All", nonPedroes);
 	
 				int pedroIndex = (int)Mathf.Floor (Random.value * guys.Count);
@@ -39,8 +42,7 @@ public class Game
 				PrintList ("All without Pedro", nonPedroes);
 				
 				List<Guy> shuffledNonPedroes = new List<Guy> ();
-				while (nonPedroes.Count > 0) {
-						
+				while (nonPedroes.Count > 0) {						
 						int index = (int)Mathf.Floor (Random.value * nonPedroes.Count);
 						shuffledNonPedroes.Add (nonPedroes [index]);
 						nonPedroes.RemoveAt (index);
@@ -58,7 +60,6 @@ public class Game
 		public static void SalvationFor(Guy runner) {
 				runner.ShutUp ();
 				runner.RemoveFromScene ();
-				runner.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 		}
 		
 		public static void ShootingSpree(Guy protagonist, Guy shooter) {
@@ -66,6 +67,7 @@ public class Game
 						shooter.Chase(protagonist);
 				}
 				shooter.ShootButRememberThatGuyIsSpecial (protagonist);
+				shooter.ShowPlayButton ();
 		}
 		
 		public static void LossSequenceCoupDeGrace ()
