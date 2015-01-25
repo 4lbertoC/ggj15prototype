@@ -25,7 +25,7 @@ public class Guy : MonoBehaviour
 		private bool dead = false;
 		private bool scared = false;
 		private bool chased = false;
-		private GameObject balloon;
+		public GameObject balloon;
 		private int framesBeforeShuttingUp = -1;
 		private float transitionTime = 0;
 		private List<string> sentences = new List<string> ();
@@ -42,7 +42,11 @@ public class Guy : MonoBehaviour
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
 		private AudioPlayer audioPlayer;
-		
+		public List<Sprite> balloonSprites;
+		public Sprite balloonOh;
+		public Sprite balloonNoo;
+		public Sprite balloonStop;
+	
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
@@ -148,7 +152,6 @@ public class Guy : MonoBehaviour
 			
 		}
 		
-		
 		private Arm GetArm (int armIndex)
 		{
 				SpawnArmsIfNecessary ();
@@ -211,38 +214,31 @@ public class Guy : MonoBehaviour
 				return guyId;
 		}
 		
-		public void Speak (string sentence)
+		public void Speak (Sprite sentence)
 		{	
-				if (balloon == null) {
-						balloon = Instantiate (balloonPrefab, 
-								this.GetPosition () + new Vector3 (0.1f, 1.0f, -2.0f), 
-								Quaternion.identity) as GameObject;
-						// balloon.transform.parent = this.transform;
-				}
 				balloon.SetActive (true);
-				TextMesh sentenceTextMesh = balloon.GetComponentInChildren<TextMesh> ();
-				sentenceTextMesh.text = sentence;
+				balloon.GetComponent<SpriteRenderer> ().sprite = sentence;
 				framesBeforeShuttingUp = 90;
 		}
 		
 		public void RandomSpeak ()
 		{
-				int random = Random.Range (0, sentences.Count);
+				balloon.SetActive (true);
+				int random = Random.Range (0, balloonSprites.Count);
 				// Debug.Log ("Random speak " + random);
-				this.Speak (sentences [random]);
+				balloon.GetComponent<SpriteRenderer> ().sprite = balloonSprites [random];
+				framesBeforeShuttingUp = 90;
 		}
-
+	
 		public void ShutUp ()
 		{
-				if (balloon != null) {
-						balloon.SetActive (false);
-				}
+				balloon.SetActive (false);
 				framesBeforeShuttingUp = -1;
 		}
 
 		public void Chase (Guy chasedGuy)
 		{
-				Speak ("STOP!");
+				Speak (balloonStop);
 				chasedGuy.chased = true;
 		}
 
@@ -262,9 +258,9 @@ public class Guy : MonoBehaviour
 		IEnumerator ScreamOhNoCoroutine ()
 		{
 				yield return new WaitForSeconds (0.5f);	
-				Speak ("Oh...");
+				Speak (balloonOh);
 				yield return new WaitForSeconds (1.0f);	
-				Speak ("Nooo!");
+				Speak (balloonNoo);
 		}
 		
 		public void ShootButRememberThatGuyIsSpecial (Guy specialGuy)
@@ -366,7 +362,7 @@ public class Guy : MonoBehaviour
 		{
 				const float CHECK_PERIOD = 0.5f;
 				while (checkDeath && !dead) {			
-					yield return new WaitForSeconds (CHECK_PERIOD);
+						yield return new WaitForSeconds (CHECK_PERIOD);
 				}
 				yield return new WaitForSeconds (seconds);
 				// Check twice to be "sure" that the bullets are not flying or about to fly
@@ -377,7 +373,7 @@ public class Guy : MonoBehaviour
 								Debug.Log ("Bullets are still flying... wait");
 						}
 				}
-				Debug.Log ("Bullets did not fly in the last "  + CHECK_PERIOD * 2 + " seconds");
+				Debug.Log ("Bullets did not fly in the last " + CHECK_PERIOD * 2 + " seconds");
 				GameObject.FindGameObjectWithTag ("PlayButton").GetComponent<Restarter> ().Show ();
 		}
 
