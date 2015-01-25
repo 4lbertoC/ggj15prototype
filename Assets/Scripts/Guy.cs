@@ -34,7 +34,8 @@ public class Guy : MonoBehaviour
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
-		private const float AGONY_TIME = 0.1f;
+		private const float REVENGE_TIME = 0.2f;
+		private const float AGONY_TIME = 0.2f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
 		public GuyChoiceBalloon guyChoiceBalloon;
@@ -263,13 +264,15 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
+			if (!scared) {
 				scared = true;
 				if (!chased) {
-						for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-								AimAtNobody (armIndex);
-						}	
-				}			
-				StartCoroutine (ScreamOhNoCoroutine ());
+					for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+						AimAtNobody(armIndex);
+					}	
+				}
+				StartCoroutine(ScreamOhNoCoroutine());
+			}
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
@@ -288,14 +291,16 @@ public class Guy : MonoBehaviour
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
 								} else {
-										arm.Shoot (30.0f, specialGuy);
+										arm.Shoot (15.0f, specialGuy);
 								}
 						}
 				}
 		}
 
-		IEnumerator DeathCoroutine ()
-		{
+		IEnumerator DeathCoroutine (Guy specialGuy)
+		{		
+				yield return new WaitForSeconds (REVENGE_TIME);
+				ShootButRememberThatGuyIsSpecial (specialGuy);
 				yield return new WaitForSeconds (AGONY_TIME);
 				gameObject.GetComponentInChildren<Body> ().Hide ();
 				foreach (Arm arm in arms) {
@@ -303,7 +308,8 @@ public class Guy : MonoBehaviour
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
 				dead = true;
-				if (scared) {
+				if (scared) {			
+						yield return new WaitForSeconds (3.0f);
 						Game.LossSequenceCoupDeGrace ();
 				}
 		}
@@ -311,8 +317,7 @@ public class Guy : MonoBehaviour
 		public void Die (Guy specialGuy)
 		{
 				if (IsAlive ()) {			
-						StartCoroutine (DeathCoroutine ());			
-						ShootButRememberThatGuyIsSpecial (specialGuy);
+						StartCoroutine (DeathCoroutine (specialGuy));
 				}
 		}
 		
