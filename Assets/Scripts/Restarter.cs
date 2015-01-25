@@ -15,5 +15,6 @@ public class Restarter : MonoBehaviour {
 
 	public void Hide() {
 		this.gameObject.transform.localPosition = new Vector3 (0, 15.7f, 0);
+		GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ().StopSound ("Victory");
 	}
 }

@@ -145,7 +145,7 @@ public class Guy : MonoBehaviour
 		
 		public void PedroRun ()
 		{	
-				gameState.ProceedByRunning(this);
+				gameState.ProceedByRunning (this);
 			
 		}
 		
@@ -156,7 +156,7 @@ public class Guy : MonoBehaviour
 		
 		public void NonPedroRun ()
 		{
-				gameState.ProceedByRunning(this);
+				gameState.ProceedByRunning (this);
 		}
 		
 		public void NonPedroShoot ()
@@ -259,13 +259,13 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
-			scared = true;
-			if (!chased) {
-				for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-					AimAtNobody(armIndex);
-				}	
-			}			
-			StartCoroutine(ScreamOhNoCoroutine());
+				scared = true;
+				if (!chased) {
+						for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+								AimAtNobody (armIndex);
+						}	
+				}			
+				StartCoroutine (ScreamOhNoCoroutine ());
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
@@ -354,6 +354,7 @@ public class Guy : MonoBehaviour
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ().PlaySound ("Victory");
 				tequilaBalloon.SetActive (true);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
@@ -377,7 +378,8 @@ public class Guy : MonoBehaviour
 				Destroy (this.gameObject);
 		}
 
-		public void ShowPlayButton() {
-			StartCoroutine (ShowPlayButtonCoroutine (5.0f));
+		public void ShowPlayButton ()
+		{
+				StartCoroutine (ShowPlayButtonCoroutine (5.0f));
 		}
 }
