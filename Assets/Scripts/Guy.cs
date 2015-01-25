@@ -358,7 +358,7 @@ public class Guy : MonoBehaviour
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
-				StartCoroutine (ShowPlayButtonCoroutine ());
+				StartCoroutine (ShowPlayButtonCoroutine (2.0f));
 		}
 
 		public void ShowVictorious ()
@@ -366,14 +366,18 @@ public class Guy : MonoBehaviour
 				phase = GuyPhase.Victorious;
 		}
 
-		IEnumerator ShowPlayButtonCoroutine ()
+		IEnumerator ShowPlayButtonCoroutine (float seconds)
 		{
-				yield return new WaitForSeconds (2.0f);
+				yield return new WaitForSeconds (seconds);
 				GameObject.FindGameObjectWithTag ("PlayButton").GetComponent<Restarter> ().Show ();
 		}
 
 		public void Destroy ()
 		{
 				Destroy (this.gameObject);
+		}
+
+		public void ShowPlayButton() {
+			StartCoroutine (ShowPlayButtonCoroutine (5.0f));
 		}
 }

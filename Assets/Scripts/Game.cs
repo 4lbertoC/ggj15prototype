@@ -36,7 +36,7 @@ public class Game
 	
 				int pedroIndex = (int)Mathf.Floor (Random.value * guys.Count);
 				Guy pedro = nonPedroes [pedroIndex];
-				// pedro.Speak ("soy Pedro");
+				pedro.Speak ("soy Pedro");
 				Debug.Log (pedro.GetId () + " is Pedro!");
 				nonPedroes.Remove (pedro);
 				PrintList ("All without Pedro", nonPedroes);
@@ -67,6 +67,7 @@ public class Game
 						shooter.Chase(protagonist);
 				}
 				shooter.ShootButRememberThatGuyIsSpecial (protagonist);
+				shooter.ShowPlayButton ();
 		}
 		
 		public static void LossSequenceCoupDeGrace ()
