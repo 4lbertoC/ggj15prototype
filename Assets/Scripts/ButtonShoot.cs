@@ -9,18 +9,9 @@ public class ButtonShoot : MonoBehaviour
 		public GuyChoiceButton guyChoiceBalloon;
 
 		void OnMouseDown ()
-		{
-				bool isPedro = gameState.IsPedro (guy);
-				if (isPedro) {
-						Debug.Log ("Clicked OnPedroShoot ---------------------");				
-
-						guy.transform.parent.gameObject.BroadcastMessage ("OnPedroShoot");	
-				} else {
-						Debug.Log ("Clicked OnNonPedroShoot ---------------------");				
-
-						guy.transform.parent.gameObject.BroadcastMessage ("OnNonPedroShoot");	
-				}
-				guyChoiceBalloon.RemoveButtons ();			
+		{		
+				guyChoiceBalloon.RemoveButtons ();
+				gameState.EndByShooting(guy);
 		}
 	
 }

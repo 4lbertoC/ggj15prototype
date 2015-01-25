@@ -10,19 +10,9 @@ public class ButtonRun : MonoBehaviour
 
 		void OnMouseDown ()
 		{
-
-				bool isPedro = gameState.IsPedro (guy);
-				if (isPedro) {
-						Debug.Log ("Clicked OnPedroRun ---------------------");	
-						guy.transform.parent.gameObject.BroadcastMessage ("OnPedroRun");	
-				} else {
-						Debug.Log ("Clicked OnNotPedroRun ---------------------");	
-						guy.transform.parent.gameObject.BroadcastMessage ("OnNonPedroRun");	
-				}
 				guyChoiceBalloon.RemoveButtons ();
-			
-		}
-	
+				gameState.ProceedByRunning(guy);			
+		}	
 }
 
 

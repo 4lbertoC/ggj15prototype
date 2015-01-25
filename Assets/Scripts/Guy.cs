@@ -141,32 +141,13 @@ public class Guy : MonoBehaviour
 		
 		void OnMouseDown ()
 		{
+				Debug.Log ("Clicked on guy #" + GetId ());
 				if (gameState.IsReady ()) {
 						guyChoiceBalloon.ShowChoice (this);					
 				}
 			
 		}
 		
-		public void OnPedroRun ()
-		{	
-				gameState.ProceedByRunning (this);
-			
-		}
-		
-		public void OnPedroShoot ()
-		{
-				gameState.EndByShooting (this);
-		}
-		
-		public void OnNonPedroRun ()
-		{
-				gameState.ProceedByRunning (this);
-		}
-		
-		public void OnNonPedroShoot ()
-		{
-				gameState.EndByShooting (this);
-		}
 		
 		private Arm GetArm (int armIndex)
 		{
@@ -285,6 +266,7 @@ public class Guy : MonoBehaviour
 		
 		public void ShootButRememberThatGuyIsSpecial (Guy specialGuy)
 		{
+				Debug.Log ("Guy #" + GetId () + " about to shoot");
 				foreach (Arm arm in arms) {
 						if (arm.target != null) {
 								audioPlayer.PlaySound ("Gun");
