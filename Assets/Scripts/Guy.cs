@@ -69,6 +69,7 @@ public class Guy : MonoBehaviour
 				breathSteps.Add (1.08f);
 				breathSteps.Add (1.08f);
 				breathSteps.Add (1.0f);
+				breathSteps.Add (1.0f);
 				breathPoint = Random.Range (0, framesPerBreathSteps * breathSteps.Count);
 				
 				// Debug.Log ("Guy #" + guyId + " was awaken");

@@ -81,7 +81,7 @@ public class Game
 										guy.ShootButRememberThatGuyIsSpecial(null);
 								}
 						}  else {
-								Debug.Log ("Coup de grace not needed, one survivor.");
+								Debug.Log ("Coup de grace not needed, one survivor or bullets flying.");
 						}
 				}
 		}
