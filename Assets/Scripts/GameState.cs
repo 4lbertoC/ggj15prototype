@@ -11,6 +11,7 @@ public class GameState
 		public delegate void VictoryAction ();
 		// public event VictoryAction OnVictory;
 
+		private AudioPlayer audioPlayer;
 		private List<Guy> currentGuys = new List<Guy> ();
 		private Guy currentPedro;
 		private static GameState _instance;
@@ -40,7 +41,7 @@ public class GameState
 		{
 				currentGuys = guys;
 				currentPedro = Game.FindPedro (currentGuys);
-				SetPhase(GamePhase.Ready);
+				SetPhase (GamePhase.Ready);
 		}
 		
 		public bool IsReady ()
@@ -69,9 +70,9 @@ public class GameState
 						
 						
 						if (shooter == currentPedro) {
-								SetPhase(GamePhase.Outro, GameOverType.BittersweetEnding);
+								SetPhase (GamePhase.Outro, GameOverType.BittersweetEnding);
 						} else {
-								SetPhase(GamePhase.Outro, GameOverType.WarDoesntWork);
+								SetPhase (GamePhase.Outro, GameOverType.WarDoesntWork);
 						}
 						Game.ShootingSpree (shooter, shooter);
 				}
@@ -81,17 +82,17 @@ public class GameState
 		{		
 				
 				if (runner == currentPedro) {							
-						SetPhase(GamePhase.GuyEscaping);
+						SetPhase (GamePhase.GuyEscaping);
 						RemoveGuy (runner);
 						Game.SalvationFor (runner);
 						if (currentGuys.Count == 2) {					
-								SetPhase(GamePhase.Outro, GameOverType.HappyEnding);
+								SetPhase (GamePhase.Outro, GameOverType.HappyEnding);
 								Game.VictorySequence (currentGuys, savedGuys);
 						} else {
 								ResetGame ();
 						}
 				} else {
-						SetPhase(GamePhase.Outro, GameOverType.Martyrdom);
+						SetPhase (GamePhase.Outro, GameOverType.Martyrdom);
 						foreach (Guy guy in currentGuys) {
 								if (guy.IsAimingAt (runner)) {
 										Game.ShootingSpree (runner, guy);
@@ -145,12 +146,12 @@ public class GameState
 	
 		public void ResetGame ()
 		{
-				SetPhase(GamePhase.TargetsChanging);
+				SetPhase (GamePhase.TargetsChanging);
 				currentPedro = Game.FindPedro (currentGuys);
 				currentPedro.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 				OnNewStandoff ();
 				Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
-				SetPhase(GamePhase.Ready);
+				SetPhase (GamePhase.Ready);
 		}
 
 		public int GetGuysCount ()
@@ -181,22 +182,22 @@ public class GameState
 				currentPedro = null;
 				currentGuys = new List<Guy> ();
 				savedGuys = new List<Guy> ();
-				SetPhase(GamePhase.Intro);
+				SetPhase (GamePhase.Intro);
 		}
 
 		public bool AreBulletsFlying ()
 		{
-			return GameObject.FindGameObjectsWithTag("Bullet").Length > 0;
+				return GameObject.FindGameObjectsWithTag ("Bullet").Length > 0;
 		}
 
 		public void StopGame ()
 		{
-				SetPhase(GamePhase.Stopped);
+				SetPhase (GamePhase.Stopped);
 		}
 
 		void SetPhase (GamePhase phase)
 		{
-				SetPhase(phase, GameOverType.NotYetDefined);
+				SetPhase (phase, GameOverType.NotYetDefined);
 		}
 
 		void SetPhase (GamePhase phase, GameOverType gameOverType)
@@ -206,7 +207,30 @@ public class GameState
 				this.gameOverType = gameOverType;
 				if (phase != oldPhase) {
 						Debug.Log ("Phase change from " + oldPhase + " to " + phase);
+						ChangeMusic ();
 				}
+		}
+
+		void ChangeMusic ()
+		{
+		Debug.Log ("AudioPlayer is " + audioPlayer);
+		if (audioPlayer != null) {
+						switch (phase) {
+						case GamePhase.Intro:
+								break;
+						case GamePhase.Ready:
+								audioPlayer.PlayMusic (1);
+								break;
+						case GamePhase.Outro:
+								break;
+						}
+				}
+		}
+
+		public void SetAudioPlayer (AudioPlayer player)
+		{
+				Debug.Log ("Player set to " + player);
+				audioPlayer = player;
 		}
 
 }

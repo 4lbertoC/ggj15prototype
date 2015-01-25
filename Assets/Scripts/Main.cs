@@ -27,6 +27,9 @@ public class Main : MonoBehaviour
 				positions.Add (new Vector3 (-2.52f, -3.06f, -1.785f));
 				positions.Add (new Vector3 (1.25f, -3.2f, -4.3f));
 				positions.Add (new Vector3 (5.26f, -1.69f, -1.06f));
+				
+				AudioPlayer audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
+				gameState.SetAudioPlayer (audioPlayer);
 		}
 
 		private void PrintCombinations (Dictionary<Guy, List<Guy>> allTargets)

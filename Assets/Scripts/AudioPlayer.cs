@@ -10,8 +10,9 @@ public class AudioPlayer : MonoBehaviour
 		public List<AudioSource> escapeSounds;
 		public List<AudioSource> deadSounds;
 		public List<AudioSource> gunSounds;
-		public AudioSource themeMusic;
+		public List<AudioSource> musics;
 		private Dictionary<string, List<AudioSource>> audioSources = new Dictionary<string, List<AudioSource>> ();
+		private int playingMusic = 0;
 
 		void Awake ()
 		{
@@ -33,5 +34,16 @@ public class AudioPlayer : MonoBehaviour
 				foreach (AudioSource a in audioSources[id]) {
 						a.Stop ();
 				}
+		}
+
+		public void PlayMusic (int musicId)
+		{
+				if (musicId == playingMusic) {
+						return;
+				}
+				foreach (AudioSource s in musics) {
+						s.Stop ();
+				}
+				musics [musicId].Play ();
 		}
 }
