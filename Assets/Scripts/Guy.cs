@@ -38,11 +38,10 @@ public class Guy : MonoBehaviour
 		private const float AGONY_TIME = 0.2f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
-		public GuyChoiceBalloon guyChoiceBalloon;
+		public GuyChoiceButton guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
-
-	private AudioPlayer audioPlayer;
+		private AudioPlayer audioPlayer;
 		
 		void Awake ()
 		{
@@ -58,7 +57,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("?!");
 				// Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
-		audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
+				audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
 
 		// Use this for initialization
@@ -99,17 +98,17 @@ public class Guy : MonoBehaviour
 				}
 				
 				// DEBUG KEYS: RIMUOVILEEE
-				if (!gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.Z)) {
-						if (GetId () == 0) {
-								Debug.Log (GetId () + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
-						}
-						NonPedroShoot ();
-				}
-				
-				if (gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.P)) {
-						Debug.Log (GetId () + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
-						PedroShoot ();
-				}
+//				if (!gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.Z)) {
+//						if (GetId () == 0) {
+//								Debug.Log (GetId () + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+//						}
+//						OnNonPedroShoot ();
+//				}
+//				
+//				if (gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.P)) {
+//						Debug.Log (GetId () + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+//						OnPedroShoot ();
+//				}
 		}
 
 		private void SpawnArmsIfNecessary ()
@@ -124,20 +123,21 @@ public class Guy : MonoBehaviour
 						}
 				}
 				foreach (Arm arm in arms) {
-						arm.Show();
+						arm.Show ();
 				}
 		}
 
 		public void RemoveFromScene ()
 		{
+				audioPlayer.PlaySound ("Escape");
 				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
 				AimAtNobody (1);
 				foreach (Arm arm in arms) {
-					arm.Hide();
+						arm.Hide ();
 				}
-		}		
+		}
 		
 		void OnMouseDown ()
 		{
@@ -147,23 +147,23 @@ public class Guy : MonoBehaviour
 			
 		}
 		
-		public void PedroRun ()
+		public void OnPedroRun ()
 		{	
 				gameState.ProceedByRunning (this);
 			
 		}
 		
-		public void PedroShoot ()
+		public void OnPedroShoot ()
 		{
 				gameState.EndByShooting (this);
 		}
 		
-		public void NonPedroRun ()
+		public void OnNonPedroRun ()
 		{
 				gameState.ProceedByRunning (this);
 		}
 		
-		public void NonPedroShoot ()
+		public void OnNonPedroShoot ()
 		{
 				gameState.EndByShooting (this);
 		}
@@ -177,6 +177,7 @@ public class Guy : MonoBehaviour
 		public void AimAt (int armIndex, Guy targetGuy)
 		{
 				// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
+				audioPlayer.PlaySound ("Caricatore");
 				Arm arm = GetArm (armIndex);
 				if (arm == null) {
 						Debug.Log ("No arm!");
@@ -187,16 +188,17 @@ public class Guy : MonoBehaviour
 
 		public void WaitAndSuddenlyAimAt (int armIndex, Guy targetGuy)
 		{
-				StartCoroutine(AfterRandomPauseAimCoroutine(armIndex, targetGuy));
+				StartCoroutine (AfterRandomPauseAimCoroutine (armIndex, targetGuy));
 		}
 		
-       	IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy) {		
+		IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy)
+		{		
 				yield return new WaitForSeconds (Random.value * 3);
 				if (Random.value > 0.7) {
-					RandomSpeak ();
+						RandomSpeak ();
 				}
-				AimAt(armIndex, targetGuy);
-       	}
+				AimAt (armIndex, targetGuy);
+		}
 		
 		public void AimAtNobody (int armIndex)
 		{
@@ -262,15 +264,15 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
-			if (!scared) {
-				scared = true;
-				if (!chased) {
-					for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-						AimAtNobody(armIndex);
-					}	
+				if (!scared) {
+						scared = true;
+						if (!chased) {
+								for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+										AimAtNobody (armIndex);
+								}	
+						}
+						StartCoroutine (ScreamOhNoCoroutine ());
 				}
-				StartCoroutine(ScreamOhNoCoroutine());
-			}
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
@@ -285,6 +287,7 @@ public class Guy : MonoBehaviour
 		{
 				foreach (Arm arm in arms) {
 						if (arm.target != null) {
+								audioPlayer.PlaySound ("Gun");
 								if (arm.target == specialGuy) {
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
@@ -304,6 +307,7 @@ public class Guy : MonoBehaviour
 						arm.Hide ();
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
+				audioPlayer.PlaySound ("Dead");
 				dead = true;
 				if (scared) {			
 						yield return new WaitForSeconds (3.0f);

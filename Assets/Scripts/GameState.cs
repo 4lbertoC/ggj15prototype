@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class GameState
 {
-		public delegate void NewStandoffAction();
+		public delegate void NewStandoffAction ();
+
 		public event NewStandoffAction OnNewStandoff;
 
 		public delegate void VictoryAction ();
@@ -20,7 +21,8 @@ public class GameState
 				Ready,
 				TargetsChanging,
 				GuyEscaping,
-				Outro
+				Outro,
+				Stopped
 		}
 		public GameOverType gameOverType = GameOverType.NotYetDefined;
 		public enum GameOverType
@@ -46,6 +48,11 @@ public class GameState
 				return (phase == GamePhase.Ready);
 		}
 
+		public bool IsStopped ()
+		{
+				return (phase == GamePhase.Stopped);
+		}
+	
 		public bool IsIntro ()
 		{
 				return (phase == GamePhase.Intro);
@@ -58,7 +65,7 @@ public class GameState
 
 		public void EndByShooting (Guy shooter)
 		{		
-				if (IsReady ()) {
+				if (IsStopped ()) {
 						phase = GamePhase.Outro;
 						if (shooter == currentPedro) {
 								gameOverType = GameOverType.BittersweetEnding;
@@ -183,5 +190,9 @@ public class GameState
 			return GameObject.FindGameObjectsWithTag("Bullet").Length > 0;
 		}
 
+		public void StopGame ()
+		{
+				phase = GamePhase.Stopped;
+		}
 }
 
