@@ -89,6 +89,7 @@ public class GameState
 						foreach (Guy guy in currentGuys) {
 								if (guy.IsAimingAt (runner)) {
 										Game.ShootingSpree (runner, guy);
+										break;
 								}
 						}
 				}
