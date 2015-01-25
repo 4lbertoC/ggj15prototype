@@ -12,7 +12,7 @@ public class BackgroundManager : MonoBehaviour
 
 		void Awake ()
 		{
-				gameState.OnRemoveGuy += NextPhase;
+				gameState.OnNewStandoff += NextPhase;
 				from = this.gameObject.transform.rotation;
 		}
 
