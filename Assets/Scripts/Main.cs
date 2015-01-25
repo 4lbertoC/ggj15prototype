@@ -7,7 +7,7 @@ public class Main : MonoBehaviour
 
 		public GameObject guyPrefab;
 		public GameObject housePrefab;
-		public GameObject foreground;
+		public Restarter playButton;
 		private List<Vector3> positions = new List<Vector3> ();
 		private Quaternion defaultRotation = Quaternion.Euler (270, 0, 0);
 		private GameState gameState = GameState.GetInstance ();
@@ -42,9 +42,11 @@ public class Main : MonoBehaviour
 				}
 		}
 
-		// Use this for initialization
-		void Start ()
+		public void Restart ()
 		{
+				playButton.Hide ();
+				gameState.Clear ();
+
 				List<Guy> guys = new List<Guy> ();
 
 				for (int i = 0; i < positions.Count; i++) {
@@ -58,6 +60,12 @@ public class Main : MonoBehaviour
 				gameState.Init (guys);
 				SendMessage ("OnGuysUpdate");
 
+		}
+	
+		// Use this for initialization
+		void Start ()
+		{
+				Restart ();
 		}
 
 		// Update is called once per frame
