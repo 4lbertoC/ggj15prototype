@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class BackgroundManager : MonoBehaviour
 {
-		public SpriteRenderer spriteRenderer;
 		private GameState gameState = GameState.GetInstance ();
 		private float nextTransition = 0;
 		private Quaternion from;

@@ -157,6 +157,9 @@ public class Guy : MonoBehaviour
 		
 		public void AimAt (int armIndex, Guy targetGuy)
 		{
+				if (!phase.Equals (GuyPhase.Ready)) {
+						return;
+				}
 				// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
 				audioPlayer.PlaySound ("Caricatore");
 				Arm arm = GetArm (armIndex);
