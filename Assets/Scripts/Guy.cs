@@ -41,6 +41,8 @@ public class Guy : MonoBehaviour
 		public GuyChoiceBalloon guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
+
+	private AudioPlayer audioPlayer;
 		
 		void Awake ()
 		{
@@ -56,6 +58,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("?!");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
+		audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
 
 		// Use this for initialization
@@ -146,7 +149,7 @@ public class Guy : MonoBehaviour
 		
 		public void PedroRun ()
 		{	
-				gameState.ProceedByRunning(this);
+				gameState.ProceedByRunning (this);
 			
 		}
 		
@@ -157,7 +160,7 @@ public class Guy : MonoBehaviour
 		
 		public void NonPedroRun ()
 		{
-				gameState.ProceedByRunning(this);
+				gameState.ProceedByRunning (this);
 		}
 		
 		public void NonPedroShoot ()
@@ -359,6 +362,7 @@ public class Guy : MonoBehaviour
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				audioPlayer.PlaySound ("Victory");
 				tequilaBalloon.SetActive (true);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
@@ -382,7 +386,8 @@ public class Guy : MonoBehaviour
 				Destroy (this.gameObject);
 		}
 
-		public void ShowPlayButton() {
-			StartCoroutine (ShowPlayButtonCoroutine (5.0f));
+		public void ShowPlayButton ()
+		{
+				StartCoroutine (ShowPlayButtonCoroutine (5.0f));
 		}
 }
