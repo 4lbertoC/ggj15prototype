@@ -177,6 +177,7 @@ public class Guy : MonoBehaviour
 		public void AimAt (int armIndex, Guy targetGuy)
 		{
 				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
+				audioPlayer.PlaySound ("Caricatore");
 				Arm arm = GetArm (armIndex);
 				if (arm == null) {
 						Debug.Log ("No arm!");

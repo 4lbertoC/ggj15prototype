@@ -2,21 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AudioPlayer : MonoBehaviour {
+public class AudioPlayer : MonoBehaviour
+{
 
-	public AudioSource victorySound;
+		public List<AudioSource> victorySounds;
+		public List<AudioSource> caricatoreSounds;
+		private Dictionary<string, List<AudioSource>> audioSources = new Dictionary<string, List<AudioSource>> ();
 
-	private Dictionary<string, AudioSource> audioSources = new Dictionary<string, AudioSource>();
+		void Awake ()
+		{
+				audioSources.Add ("Victory", victorySounds);
+				audioSources.Add ("Caricatore", caricatoreSounds);
+		}
 
-	void Awake() {
-		audioSources.Add ("Victory", victorySound);
-	}
+		public void PlaySound (string id)
+		{
+				int randSoundIdx = (int)Mathf.Floor (Random.value * audioSources [id].Count);
+				audioSources [id] [randSoundIdx].Play ();
+		}
 
-	public void PlaySound(string id) {
-		audioSources [id].Play ();
-	}
-
-	public void StopSound(string id) {
-		audioSources [id].Stop ();
-	}
+		public void StopSound (string id)
+		{
+				foreach (AudioSource a in audioSources[id]) {
+						a.Stop ();
+				}
+		}
 }
