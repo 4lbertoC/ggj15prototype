@@ -34,7 +34,7 @@ public class Guy : MonoBehaviour
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
-		private const float REVENGE_TIME = 0.3f;
+		private const float REVENGE_TIME = 0.2f;
 		private const float AGONY_TIME = 0.2f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
