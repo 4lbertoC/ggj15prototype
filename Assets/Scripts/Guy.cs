@@ -219,6 +219,7 @@ public class Guy : MonoBehaviour
 				balloon.SetActive (true);
 				balloon.GetComponent<SpriteRenderer> ().sprite = sentence;
 				framesBeforeShuttingUp = 90;
+				audioPlayer.PlaySound ("Voice");
 		}
 		
 		public void RandomSpeak ()
@@ -228,6 +229,7 @@ public class Guy : MonoBehaviour
 				// Debug.Log ("Random speak " + random);
 				balloon.GetComponent<SpriteRenderer> ().sprite = balloonSprites [random];
 				framesBeforeShuttingUp = 90;
+				audioPlayer.PlaySound ("Voice");
 		}
 	
 		public void ShutUp ()
