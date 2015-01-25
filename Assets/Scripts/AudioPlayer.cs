@@ -10,6 +10,7 @@ public class AudioPlayer : MonoBehaviour
 		public List<AudioSource> escapeSounds;
 		public List<AudioSource> deadSounds;
 		public List<AudioSource> gunSounds;
+		public AudioSource themeMusic;
 		private Dictionary<string, List<AudioSource>> audioSources = new Dictionary<string, List<AudioSource>> ();
 
 		void Awake ()

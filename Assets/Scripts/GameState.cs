@@ -40,7 +40,7 @@ public class GameState
 		{
 				currentGuys = guys;
 				currentPedro = Game.FindPedro (currentGuys);
-				phase = GamePhase.Ready;				
+				SetPhase(GamePhase.Ready);
 		}
 		
 		public bool IsReady ()
@@ -66,11 +66,12 @@ public class GameState
 		public void EndByShooting (Guy shooter)
 		{		
 				if (IsStopped ()) {
-						phase = GamePhase.Outro;
+						
+						
 						if (shooter == currentPedro) {
-								gameOverType = GameOverType.BittersweetEnding;
+								SetPhase(GamePhase.Outro, GameOverType.BittersweetEnding);
 						} else {
-								gameOverType = GameOverType.WarDoesntWork;
+								SetPhase(GamePhase.Outro, GameOverType.WarDoesntWork);
 						}
 						Game.ShootingSpree (shooter, shooter);
 				}
@@ -80,19 +81,17 @@ public class GameState
 		{		
 				
 				if (runner == currentPedro) {							
-						phase = GamePhase.GuyEscaping;
+						SetPhase(GamePhase.GuyEscaping);
 						RemoveGuy (runner);
 						Game.SalvationFor (runner);
 						if (currentGuys.Count == 2) {					
-								phase = GamePhase.Outro;
-								gameOverType = GameOverType.HappyEnding;
+								SetPhase(GamePhase.Outro, GameOverType.HappyEnding);
 								Game.VictorySequence (currentGuys, savedGuys);
 						} else {
 								ResetGame ();
 						}
 				} else {
-						phase = GamePhase.Outro;
-						gameOverType = GameOverType.Martyrdom;
+						SetPhase(GamePhase.Outro, GameOverType.Martyrdom);
 						foreach (Guy guy in currentGuys) {
 								if (guy.IsAimingAt (runner)) {
 										Game.ShootingSpree (runner, guy);
@@ -146,12 +145,12 @@ public class GameState
 	
 		public void ResetGame ()
 		{
-				phase = GamePhase.TargetsChanging;	
+				SetPhase(GamePhase.TargetsChanging);
 				currentPedro = Game.FindPedro (currentGuys);
 				currentPedro.transform.parent.gameObject.BroadcastMessage ("OnGuysUpdate");
 				OnNewStandoff ();
 				Debug.Log ("Reset Gaming - New guys: " + currentGuys.Count);
-				phase = GamePhase.Ready;
+				SetPhase(GamePhase.Ready);
 		}
 
 		public int GetGuysCount ()
@@ -182,7 +181,7 @@ public class GameState
 				currentPedro = null;
 				currentGuys = new List<Guy> ();
 				savedGuys = new List<Guy> ();
-				phase = GamePhase.Intro;
+				SetPhase(GamePhase.Intro);
 		}
 
 		public bool AreBulletsFlying ()
@@ -192,7 +191,23 @@ public class GameState
 
 		public void StopGame ()
 		{
-				phase = GamePhase.Stopped;
+				SetPhase(GamePhase.Stopped);
 		}
+
+		void SetPhase (GamePhase phase)
+		{
+				SetPhase(phase, GameOverType.NotYetDefined);
+		}
+
+		void SetPhase (GamePhase phase, GameOverType gameOverType)
+		{
+				GamePhase oldPhase = this.phase;
+				this.phase = phase;
+				this.gameOverType = gameOverType;
+				if (phase != oldPhase) {
+						Debug.Log ("Phase change from " + oldPhase + " to " + phase);
+				}
+		}
+
 }
 
