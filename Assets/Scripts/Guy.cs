@@ -46,7 +46,7 @@ public class Guy : MonoBehaviour
 		public Sprite balloonOh;
 		public Sprite balloonNoo;
 		public Sprite balloonStop;
-	
+
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
@@ -295,6 +295,8 @@ public class Guy : MonoBehaviour
 						Game.LossSequenceCoupDeGrace ();
 				}
 		}
+
+		
 	
 		public void Die (Guy specialGuy)
 		{
