@@ -213,14 +213,17 @@ public class GameState
 
 		void ChangeMusic ()
 		{
-		if (audioPlayer != null) {
+				if (audioPlayer != null) {
 						switch (phase) {
-						case GamePhase.Intro:
-								break;
 						case GamePhase.Ready:
 								audioPlayer.PlayMusic (1);
 								break;
 						case GamePhase.Outro:
+								if (gameOverType.Equals (GameOverType.HappyEnding)) {
+										audioPlayer.PlayMusic (2);
+								} else {
+										audioPlayer.PlayMusic (3);
+								}
 								break;
 						}
 				}
@@ -228,6 +231,7 @@ public class GameState
 
 		public void SetAudioPlayer (AudioPlayer player)
 		{
+				Debug.Log ("Player set to " + player);
 				audioPlayer = player;
 		}
 
