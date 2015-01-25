@@ -46,7 +46,10 @@ public class Guy : MonoBehaviour
 		public Sprite balloonOh;
 		public Sprite balloonNoo;
 		public Sprite balloonStop;
-
+		private List<float> breathSteps = new List<float>();
+		private int breathPoint = 0;
+		private const int framesPerBreathSteps = 50;
+	
 		void Awake ()
 		{
 				guyId = guyIdCumulative++;
@@ -59,6 +62,14 @@ public class Guy : MonoBehaviour
 				sentences.Add ("Back down");
 				sentences.Add ("Run");
 				sentences.Add ("?!");
+				
+				breathSteps.Add (1.0f);
+				breathSteps.Add (1.0f);
+				breathSteps.Add (1.08f);
+				breathSteps.Add (1.08f);
+				breathSteps.Add (1.0f);
+				breathPoint = Random.Range (0, framesPerBreathSteps * breathSteps.Count);
+				
 				// Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 				audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
@@ -99,6 +110,13 @@ public class Guy : MonoBehaviour
 						} else {
 								spriteRenderer.sprite = savedSprite;
 						}
+				} else if (!dead) {
+						breathPoint = (breathPoint + 1 ) % (breathSteps.Count * framesPerBreathSteps);
+						int previousBreathStep = breathPoint / framesPerBreathSteps;
+						int nextBreathStep = (previousBreathStep + 1) % breathSteps.Count;
+						float ratio = ((float) (breathPoint % framesPerBreathSteps)) / framesPerBreathSteps;
+						float breath = (ratio * breathSteps[nextBreathStep]) + ((1f - ratio) * breathSteps[previousBreathStep]);
+						transform.localScale = new Vector3(breath, 1f, 1f);
 				}
 				
 				// DEBUG KEYS: RIMUOVILEEE
@@ -219,6 +237,7 @@ public class Guy : MonoBehaviour
 				balloon.SetActive (true);
 				balloon.GetComponent<SpriteRenderer> ().sprite = sentence;
 				framesBeforeShuttingUp = 90;
+				audioPlayer.PlaySound ("Voice");
 		}
 		
 		public void RandomSpeak ()
@@ -228,6 +247,7 @@ public class Guy : MonoBehaviour
 				// Debug.Log ("Random speak " + random);
 				balloon.GetComponent<SpriteRenderer> ().sprite = balloonSprites [random];
 				framesBeforeShuttingUp = 90;
+				audioPlayer.PlaySound ("Voice");
 		}
 	
 		public void ShutUp ()

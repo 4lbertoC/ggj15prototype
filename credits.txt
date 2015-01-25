@@ -1,11 +1,6 @@
-Music
------
-
-
-Audio
-------
-Gemma Maddaloni
-mlteenie (freesound.org)
-	169233__mlteenie__crowd-yay.wav
-jspath1
-	125428__jspath1__running-footsteps
+Conceived and developed in <48 hours
+@ Global Game Jam 2015 - Milan, Italy
+Code = {Alberto Congiu, Francesco Grotta, Mauro Vanetti}
+Graphics = {Giulia Olivares, Jacopo Rovida}
+Music = {Luca Casarotti}
+SFX = {Gemma Maddaloni, {jspath1, mlteenie}@freesound.org}
