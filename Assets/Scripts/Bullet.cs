@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+	    // Skips the verbose logging
+	    /*
 		if (target == null) {
 			Debug.Log ("Bullet starting with no target");
 		} else {
@@ -20,6 +22,7 @@ public class Bullet : MonoBehaviour {
 		} else {
 			Debug.Log ("                and no special guy");
 		}
+		*/
 	}
 	
 	// Update is called once per frame
@@ -27,7 +30,7 @@ public class Bullet : MonoBehaviour {
 		float step = speed * Time.deltaTime;
 		transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
 		if ((transform.position - target.transform.position).magnitude < 0.1f) {
-			Debug.Log ("Guy #" + target.GetId () + " gets killed");			
+			// Debug.Log ("Guy #" + target.GetId () + " gets killed");			
 			target.Die(specialGuy);
 			this.gameObject.SetActive(false);
 		}

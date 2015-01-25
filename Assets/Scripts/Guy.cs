@@ -56,7 +56,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("Back down");
 				sentences.Add ("Run");
 				sentences.Add ("?!");
-				Debug.Log ("Guy #" + guyId + " was awaken");
+				// Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
@@ -165,7 +165,6 @@ public class Guy : MonoBehaviour
 		
 		public void NonPedroShoot ()
 		{
-				Debug.Log ("NON-PEDRO SHOOT!");
 				gameState.EndByShooting (this);
 		}
 		
@@ -177,7 +176,7 @@ public class Guy : MonoBehaviour
 		
 		public void AimAt (int armIndex, Guy targetGuy)
 		{
-				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
+				// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
 				Arm arm = GetArm (armIndex);
 				if (arm == null) {
 						Debug.Log ("No arm!");
@@ -201,7 +200,7 @@ public class Guy : MonoBehaviour
 		
 		public void AimAtNobody (int armIndex)
 		{
-				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ nobody");
+				// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ nobody");
 				Arm arm = GetArm (armIndex);			
 				arm.target = null;
 		}
@@ -243,7 +242,7 @@ public class Guy : MonoBehaviour
 		public void RandomSpeak ()
 		{
 				int random = Random.Range (0, sentences.Count);
-				Debug.Log ("Random speak " + random);
+				// Debug.Log ("Random speak " + random);
 				this.Speak (sentences [random]);
 		}
 
@@ -290,7 +289,7 @@ public class Guy : MonoBehaviour
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
 								} else {
-										arm.Shoot (15.0f, specialGuy);
+										arm.ShootWithDelay (15.0f, specialGuy);
 								}
 						}
 				}
@@ -298,7 +297,6 @@ public class Guy : MonoBehaviour
 
 		IEnumerator DeathCoroutine (Guy specialGuy)
 		{		
-				yield return new WaitForSeconds (REVENGE_TIME);
 				ShootButRememberThatGuyIsSpecial (specialGuy);
 				yield return new WaitForSeconds (AGONY_TIME);
 				gameObject.GetComponentInChildren<Body> ().Hide ();
@@ -367,7 +365,7 @@ public class Guy : MonoBehaviour
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
-				StartCoroutine (ShowPlayButtonCoroutine (2.0f));
+				StartCoroutine (ShowPlayButtonCoroutine (2.0f, false));
 		}
 
 		public void ShowVictorious ()
@@ -375,9 +373,22 @@ public class Guy : MonoBehaviour
 				phase = GuyPhase.Victorious;
 		}
 
-		IEnumerator ShowPlayButtonCoroutine (float seconds)
+		IEnumerator ShowPlayButtonCoroutine (float seconds, bool checkDeath)
 		{
+				const float CHECK_PERIOD = 0.5f;
+				while (checkDeath && !dead) {			
+					yield return new WaitForSeconds (CHECK_PERIOD);
+				}
 				yield return new WaitForSeconds (seconds);
+				// Check twice to be "sure" that the bullets are not flying or about to fly
+				while (gameState.AreBulletsFlying()) {			
+						yield return new WaitForSeconds (CHECK_PERIOD);
+						while (gameState.AreBulletsFlying()) {
+								yield return new WaitForSeconds (CHECK_PERIOD);
+								Debug.Log ("Bullets are still flying... wait");
+						}
+				}
+				Debug.Log ("Bullets did not fly in the last "  + CHECK_PERIOD * 2 + " seconds");
 				GameObject.FindGameObjectWithTag ("PlayButton").GetComponent<Restarter> ().Show ();
 		}
 
@@ -386,8 +397,8 @@ public class Guy : MonoBehaviour
 				Destroy (this.gameObject);
 		}
 
-		public void ShowPlayButton ()
+		public void ShowPlayButtonAfterDeath ()
 		{
-				StartCoroutine (ShowPlayButtonCoroutine (5.0f));
+				StartCoroutine (ShowPlayButtonCoroutine (5.0f, true));
 		}
 }

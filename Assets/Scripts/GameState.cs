@@ -177,5 +177,11 @@ public class GameState
 				savedGuys = new List<Guy> ();
 				phase = GamePhase.Intro;
 		}
+
+		public bool AreBulletsFlying ()
+		{
+			return GameObject.FindGameObjectsWithTag("Bullet").Length > 0;
+		}
+
 }
 

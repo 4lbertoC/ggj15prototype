@@ -59,4 +59,15 @@ public class Arm : MonoBehaviour
 				bullet.speed = bulletSpeed;
 				bullet.specialGuy = specialGuy;
 	}
+
+	public void ShootWithDelay (float s, Guy specialGuy)
+	{
+		StartCoroutine(DelayBeforeShootCoroutine(s, specialGuy));
+	}
+	
+	IEnumerator DelayBeforeShootCoroutine (float bulletSpeed, Guy specialGuy)
+	{
+			yield return new WaitForSeconds(0.2f);			
+			Shoot (bulletSpeed, specialGuy);
+	}
 }

@@ -67,7 +67,7 @@ public class Game
 						shooter.Chase(protagonist);
 				}
 				shooter.ShootButRememberThatGuyIsSpecial (protagonist);
-				shooter.ShowPlayButton ();
+				protagonist.ShowPlayButtonAfterDeath ();
 		}
 		
 		public static void LossSequenceCoupDeGrace ()
@@ -75,7 +75,7 @@ public class Game
 				GameState gameState = GameState.GetInstance ();
 				if (gameState.IsOutro()) {
 						List<Guy> survivors = gameState.GetSurvivorsWithGuns();
-						if (survivors.Count > 1) {
+						if (survivors.Count > 1 && !gameState.AreBulletsFlying()) {
 								Debug.Log ("Coup de grace needed, " + survivors.Count + " survivors.");
 								foreach (Guy guy in survivors) {
 										guy.ShootButRememberThatGuyIsSpecial(null);
