@@ -36,7 +36,7 @@ public class Game
 	
 				int pedroIndex = (int)Mathf.Floor (Random.value * guys.Count);
 				Guy pedro = nonPedroes [pedroIndex];
-				pedro.RandomSpeak ();
+//				pedro.RandomSpeak ();
 				Debug.Log (pedro.GetId () + " is Pedro!");
 				nonPedroes.Remove (pedro);
 				PrintList ("All without Pedro", nonPedroes);
