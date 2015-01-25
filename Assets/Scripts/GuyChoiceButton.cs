@@ -15,11 +15,15 @@ public class GuyChoiceButton : MonoBehaviour
 						return;
 				}
 				gameState.StopGame ();
-				buttonS = (Instantiate (buttonShoot, new Vector3 (3.22f, 6f, 0f), Quaternion.identity) as GameObject).GetComponent<ButtonShoot> ();
+				buttonS = (Instantiate (buttonShoot, 
+		                        new Vector3 (3.22f, 6f, -1f), 
+		                        Quaternion.identity) as GameObject).GetComponent<ButtonShoot> ();
 				buttonS.gameObject.SetActive (true);
 				buttonS.guy = guy;
 				buttonS.guyChoiceBalloon = this;		
-				buttonR = (Instantiate (buttonRun, new Vector3 (-3.22f, 6f, 0f), Quaternion.identity) as GameObject).GetComponent<ButtonRun> ();		
+				buttonR = (Instantiate (buttonRun, 
+		                        new Vector3 (-3.22f, 6f, -1f), 
+		                        Quaternion.identity) as GameObject).GetComponent<ButtonRun> ();		
 				buttonR.gameObject.SetActive (true);
 				buttonR.guy = guy;
 				buttonR.guyChoiceBalloon = this;

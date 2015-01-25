@@ -48,6 +48,11 @@ public class GameState
 				return (phase == GamePhase.Ready);
 		}
 
+		public bool IsStopped ()
+		{
+				return (phase == GamePhase.Stopped);
+		}
+	
 		public bool IsIntro ()
 		{
 				return (phase == GamePhase.Intro);
@@ -60,7 +65,7 @@ public class GameState
 
 		public void EndByShooting (Guy shooter)
 		{		
-				if (IsReady ()) {
+				if (IsStopped ()) {
 						phase = GamePhase.Outro;
 						if (shooter == currentPedro) {
 								gameOverType = GameOverType.BittersweetEnding;
