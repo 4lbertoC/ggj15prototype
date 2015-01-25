@@ -45,11 +45,11 @@ public class Guy : MonoBehaviour
 		{
 				guyId = guyIdCumulative++;
 				
-				sentences.Add ("What?");
-				sentences.Add ("Do?");
-				sentences.Add ("We?");
-				sentences.Add ("Do?");		
-				sentences.Add ("Now?");
+				sentences.Add ("Hey");
+				sentences.Add ("...!");
+				sentences.Add ("Don't");
+				sentences.Add ("WTF?");		
+				sentences.Add ("Surr\nender");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
 		}
@@ -137,18 +137,24 @@ public class Guy : MonoBehaviour
 		
 		public void OnPedroRun ()
 		{	
-				gameState.EndByRunning (this);
+				gameState.ProceedByRunning (this);
 			
 		}
 		
 		public void OnPedroShoot ()
+		{
+				gameState.ProceedByRunning (this);
+			
+		}
+		
+		public void PedroShoot ()
 		{
 				gameState.EndByShooting (this);
 		}
 		
 		public void OnNonPedroRun ()
 		{
-				gameState.EndByRunning (this);
+				gameState.ProceedByRunning (this);
 		}
 		
 		public void OnNonPedroShoot ()
@@ -240,13 +246,15 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
+
+				scared = true;
 				if (!chased) {
-						scared = true;
 						for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
 								AimAtNobody (armIndex);
-						}
-						StartCoroutine (ScreamOhNoCoroutine ());
-				}
+						}	
+				}			
+				StartCoroutine (ScreamOhNoCoroutine ());
+
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
@@ -339,10 +347,22 @@ public class Guy : MonoBehaviour
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
+				StartCoroutine (ShowPlayButtonCoroutine ());
 		}
 
 		public void ShowVictorious ()
 		{
 				phase = GuyPhase.Victorious;
+		}
+
+		IEnumerator ShowPlayButtonCoroutine ()
+		{
+				yield return new WaitForSeconds (2.0f);
+				GameObject.FindGameObjectWithTag ("PlayButton").GetComponent<Restarter> ().Show ();
+		}
+
+		public void Destroy ()
+		{
+				Destroy (this.gameObject);
 		}
 }

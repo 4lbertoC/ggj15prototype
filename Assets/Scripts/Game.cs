@@ -93,17 +93,17 @@ public class Game
 				Debug.Log (output);
 		}
 
-		public static void VictorySequence (Guy pedro, List<Guy> nonPedroes, List<Guy> savedGuys)
+		public static void VictorySequence (List<Guy> nonPedroes, List<Guy> savedGuys)
 		{
-		Debug.Log ("victory!!!");
-				Guy otherSurvivor = null;
-				foreach (Guy g in nonPedroes) {
-						if (!savedGuys.Contains (g) && !g.Equals(pedro)) {
-								otherSurvivor = g;
-								break;
-						}
+				Debug.Log ("victory!!!");
+				Guy juan = nonPedroes[0];
+				Guy gonzalo = nonPedroes[1];
+				// Question balloon should be left of the answer balloon:
+				if (juan.transform.position.x < gonzalo.transform.position.x) {
+						juan.ShowAndNowMessage (gonzalo, savedGuys);
+				} else {
+						gonzalo.ShowAndNowMessage (juan, savedGuys);
 				}
-
-				pedro.ShowAndNowMessage (otherSurvivor, savedGuys);
+				
 		}
 }

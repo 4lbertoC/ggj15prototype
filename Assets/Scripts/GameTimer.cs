@@ -16,10 +16,14 @@ public class GameTimer : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
+				if (!gameState.phase.Equals (GameState.GamePhase.Ready)) {
+						return;
+				}
 				if (deadline <= 0 && !isEnded) {
 						isEnded = true;
-						OnGuysUpdate ();
-				} else if (deadline > 0 && gameState.phase.Equals(GameState.GamePhase.Ready)) {
+						gameState.MakeGuysSpeak ();
+						StartCoroutine (ResetTimerCoroutine ());
+				} else if (deadline > 0) {
 						deadline -= Time.deltaTime;
 						timerText.text = deadline.ToString ("F2");
 				}
@@ -27,16 +31,21 @@ public class GameTimer : MonoBehaviour
 
 		public void OnGuysUpdate ()
 		{
-				StartCoroutine (OnGuysUpdateCoroutine ());
-				gameState.MakeGuysSpeak ();
+				ResetTimer ();
 		}
 
-		IEnumerator OnGuysUpdateCoroutine() {
-				yield return new WaitForSeconds (0.5f);
-				gameState.ResetGame ();
+		private void ResetTimer ()
+		{
 				int guysCount = gameState.GetGuysCount ();
 				deadline = guysCount * 1.5f;
 				isEnded = false;
+		}
+
+		IEnumerator ResetTimerCoroutine ()
+		{
+				yield return new WaitForSeconds (0.5f);
+				gameState.ResetGame ();
+				ResetTimer ();
 		}
 
 }

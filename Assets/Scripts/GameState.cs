@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class GameState
 {
-		public delegate void RemoveGuyAction();
+		public delegate void RemoveGuyAction ();
+
 		public event RemoveGuyAction OnRemoveGuy;
 
 		public delegate void VictoryAction ();
@@ -24,11 +25,11 @@ public class GameState
 		public GameOverType gameOverType = GameOverType.NotYetDefined;
 		public enum GameOverType
 		{
-			NotYetDefined,
-			HappyEnding,
-			BittersweetEnding,
-			Martyrdom,
-			WarDoesntWork
+				NotYetDefined,
+				HappyEnding,
+				BittersweetEnding,
+				Martyrdom,
+				WarDoesntWork
 		}
 
 		private List<Guy> savedGuys = new List<Guy> () ;
@@ -57,38 +58,27 @@ public class GameState
 
 		public void EndByShooting (Guy shooter)
 		{		
-				if (IsReady()) {
-					phase = GamePhase.Outro;
-					if (shooter == currentPedro) {
-							gameOverType = GameOverType.BittersweetEnding;
-					} else {
-							gameOverType = GameOverType.WarDoesntWork;
-					}
-					Game.ShootingSpree(shooter, shooter);
+				if (IsReady ()) {
+						phase = GamePhase.Outro;
+						if (shooter == currentPedro) {
+								gameOverType = GameOverType.BittersweetEnding;
+						} else {
+								gameOverType = GameOverType.WarDoesntWork;
+						}
+						Game.ShootingSpree (shooter, shooter);
 				}
 		}
-	
-		public void EndGame ()
-		{
-			if (currentGuys.Count == 2) {
-					phase = GamePhase.Outro;
-					Game.VictorySequence(currentPedro, currentGuys, savedGuys);		
-			} else {
-					ResetGame ();
-			}
-			
-		}
 		
-		public void EndByRunning (Guy runner)
+		public void ProceedByRunning (Guy runner)
 		{		
 				
 				if (runner == currentPedro) {
 						RemoveGuy (runner);
-						Game.SalvationFor(runner);
+						Game.SalvationFor (runner);
 						if (currentGuys.Count == 2) {					
 								phase = GamePhase.Outro;
 								gameOverType = GameOverType.HappyEnding;
-								Game.VictorySequence(currentPedro, currentGuys, savedGuys);
+								Game.VictorySequence (currentGuys, savedGuys);
 						} else {
 								ResetGame ();
 						}
@@ -96,12 +86,12 @@ public class GameState
 						phase = GamePhase.Outro;
 						gameOverType = GameOverType.Martyrdom;
 						foreach (Guy guy in currentGuys) {
-								if (guy.IsAimingAt(runner)) {
-										Game.ShootingSpree(runner, guy);
+								if (guy.IsAimingAt (runner)) {
+										Game.ShootingSpree (runner, guy);
 								}
 						}
 				}
-		}	
+		}
 
 		public bool IsPedro (Guy guy)
 		{
@@ -115,13 +105,13 @@ public class GameState
 		
 		public List<Guy> GetSurvivorsWithGuns ()
 		{
-			List<Guy> survivors = new List<Guy>();
-			foreach (Guy guy in currentGuys) {
-				if (guy.IsAlive()) {
-					survivors.Add(guy);
+				List<Guy> survivors = new List<Guy> ();
+				foreach (Guy guy in currentGuys) {
+						if (guy.IsAlive ()) {
+								survivors.Add (guy);
+						}
 				}
-			}
-			return survivors;
+				return survivors;
 		}
 
 		public int GetSavedGuysCount ()
@@ -159,12 +149,30 @@ public class GameState
 				return currentGuys.Count;
 		}
 
-		public void MakeGuysSpeak() {
-			foreach (Guy g in currentGuys) {
-				if (!g.Equals (currentPedro) && Random.value > 0.5f) {
-					g.RandomSpeak();
+		public void MakeGuysSpeak ()
+		{
+				foreach (Guy g in currentGuys) {
+						if (!g.Equals (currentPedro) && Random.value > 0.5f) {
+								g.RandomSpeak ();
+						}
 				}
-			}
+		}
+
+		public void Clear ()
+		{
+				if (currentPedro != null) {
+						currentPedro.Destroy ();
+				}
+				foreach (Guy g in currentGuys) {
+						g.Destroy ();
+				}
+				foreach (Guy g in savedGuys) {
+						g.Destroy ();
+				}
+				currentPedro = null;
+				currentGuys = new List<Guy> ();
+				savedGuys = new List<Guy> ();
+				phase = GamePhase.Intro;
 		}
 }
 
