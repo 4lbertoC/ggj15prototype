@@ -3,17 +3,18 @@ using System.Collections;
 
 public class GuyChoiceButton : MonoBehaviour
 {
-		GameState gameState = GameState.GetInstance ();
 		public GameObject buttonShoot;
 		public GameObject buttonRun;
 		public ButtonRun buttonR;
 		public ButtonShoot buttonS;
+		private GameState gameState = GameState.GetInstance ();
 
 		public void ShowChoice (Guy guy)
 		{
 				if (guy.GetPhase ().Equals (Guy.GuyPhase.Saved)) {
 						return;
 				}
+				gameState.StopGame ();
 				buttonS = (Instantiate (buttonShoot, new Vector3 (3.22f, 6f, 0f), Quaternion.identity) as GameObject).GetComponent<ButtonShoot> ();
 				buttonS.gameObject.SetActive (true);
 				buttonS.guy = guy;
@@ -30,5 +31,7 @@ public class GuyChoiceButton : MonoBehaviour
 				buttonR.gameObject.SetActive (false);
 				buttonS.gameObject.SetActive (false);
 		}
+
+	
 }
 

@@ -12,15 +12,15 @@ public class ButtonShoot : MonoBehaviour
 		{
 				bool isPedro = gameState.IsPedro (guy);
 				if (isPedro) {
-						Debug.Log ("Clicked OnPedroShoot");				
+						Debug.Log ("Clicked OnPedroShoot ---------------------");				
 
 						guy.transform.parent.gameObject.BroadcastMessage ("OnPedroShoot");	
 				} else {
-						Debug.Log ("Clicked OnNonPedroShoot");				
+						Debug.Log ("Clicked OnNonPedroShoot ---------------------");				
 
 						guy.transform.parent.gameObject.BroadcastMessage ("OnNonPedroShoot");	
 				}
 				guyChoiceBalloon.RemoveButtons ();			
 		}
-
+	
 }

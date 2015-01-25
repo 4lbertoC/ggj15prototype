@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class GameState
 {
-		public delegate void NewStandoffAction();
+		public delegate void NewStandoffAction ();
+
 		public event NewStandoffAction OnNewStandoff;
 
 		public delegate void VictoryAction ();
@@ -20,7 +21,8 @@ public class GameState
 				Ready,
 				TargetsChanging,
 				GuyEscaping,
-				Outro
+				Outro,
+				Stopped
 		}
 		public GameOverType gameOverType = GameOverType.NotYetDefined;
 		public enum GameOverType
@@ -176,6 +178,11 @@ public class GameState
 				currentGuys = new List<Guy> ();
 				savedGuys = new List<Guy> ();
 				phase = GamePhase.Intro;
+		}
+
+		public void StopGame ()
+		{
+				phase = GamePhase.Stopped;
 		}
 }
 

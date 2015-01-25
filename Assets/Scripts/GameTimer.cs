@@ -16,7 +16,7 @@ public class GameTimer : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-				if (!gameState.IsReady()) {
+				if (!gameState.IsReady ()) {
 						return;
 				}
 				if (deadline <= 0 && !isEnded) {
@@ -44,10 +44,15 @@ public class GameTimer : MonoBehaviour
 		IEnumerator ResetTimerCoroutine ()
 		{
 				yield return new WaitForSeconds (0.5f);
-				if (gameState.IsReady()) {
-					gameState.ResetGame ();
+				if (gameState.IsReady ()) {
+						gameState.ResetGame ();
 				}
 				ResetTimer ();
+		}
+
+		public void StopTimer ()
+		{
+				isEnded = true;
 		}
 
 }

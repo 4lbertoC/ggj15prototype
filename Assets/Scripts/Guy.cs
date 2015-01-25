@@ -95,17 +95,17 @@ public class Guy : MonoBehaviour
 				}
 				
 				// DEBUG KEYS: RIMUOVILEEE
-				if (!gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.Z)) {
-						if (GetId () == 0) {
-								Debug.Log (GetId () + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
-						}
-						OnNonPedroShoot ();
-				}
-				
-				if (gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.P)) {
-						Debug.Log (GetId () + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
-						OnPedroShoot ();
-				}
+//				if (!gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.Z)) {
+//						if (GetId () == 0) {
+//								Debug.Log (GetId () + ": 0 pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+//						}
+//						OnNonPedroShoot ();
+//				}
+//				
+//				if (gameState.IsPedro (this) && Input.GetKeyDown (KeyCode.P)) {
+//						Debug.Log (GetId () + ": P pressed - LEVA QUESTA MERDAAAAAAAAAAAAAAAAAAAAAAA");
+//						OnPedroShoot ();
+//				}
 		}
 
 		private void SpawnArmsIfNecessary ()

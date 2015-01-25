@@ -13,15 +13,16 @@ public class ButtonRun : MonoBehaviour
 
 				bool isPedro = gameState.IsPedro (guy);
 				if (isPedro) {
-						Debug.Log ("Clicked OnPedroRun");	
+						Debug.Log ("Clicked OnPedroRun ---------------------");	
 						guy.transform.parent.gameObject.BroadcastMessage ("OnPedroRun");	
 				} else {
-						Debug.Log ("Clicked OnNotPedroRun");	
+						Debug.Log ("Clicked OnNotPedroRun ---------------------");	
 						guy.transform.parent.gameObject.BroadcastMessage ("OnNonPedroRun");	
 				}
 				guyChoiceBalloon.RemoveButtons ();
 			
 		}
+	
 }
 
 
