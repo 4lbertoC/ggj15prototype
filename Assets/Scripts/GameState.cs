@@ -213,7 +213,6 @@ public class GameState
 
 		void ChangeMusic ()
 		{
-		Debug.Log ("AudioPlayer is " + audioPlayer);
 		if (audioPlayer != null) {
 						switch (phase) {
 						case GamePhase.Intro:
@@ -229,7 +228,6 @@ public class GameState
 
 		public void SetAudioPlayer (AudioPlayer player)
 		{
-				Debug.Log ("Player set to " + player);
 				audioPlayer = player;
 		}
 
