@@ -34,12 +34,14 @@ public class Guy : MonoBehaviour
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
-		private const float AGONY_TIME = 0.1f;
+		private const float REVENGE_TIME = 0.3f;
+		private const float AGONY_TIME = 0.2f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
 		public GuyChoiceButton guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
+		private AudioPlayer audioPlayer;
 		
 		void Awake ()
 		{
@@ -55,6 +57,7 @@ public class Guy : MonoBehaviour
 				sentences.Add ("?!");
 				Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
+				audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
 
 		// Use this for initialization
@@ -120,7 +123,7 @@ public class Guy : MonoBehaviour
 						}
 				}
 				foreach (Arm arm in arms) {
-						arm.Show();
+						arm.Show ();
 				}
 		}
 
@@ -131,9 +134,9 @@ public class Guy : MonoBehaviour
 				AimAtNobody (0);
 				AimAtNobody (1);
 				foreach (Arm arm in arms) {
-					arm.Hide();
+						arm.Hide ();
 				}
-		}		
+		}
 		
 		void OnMouseDown ()
 		{
@@ -150,12 +153,6 @@ public class Guy : MonoBehaviour
 		}
 		
 		public void OnPedroShoot ()
-		{
-				gameState.ProceedByRunning (this);
-			
-		}
-		
-		public void PedroShoot ()
 		{
 				gameState.EndByShooting (this);
 		}
@@ -190,16 +187,17 @@ public class Guy : MonoBehaviour
 
 		public void WaitAndSuddenlyAimAt (int armIndex, Guy targetGuy)
 		{
-				StartCoroutine(AfterRandomPauseAimCoroutine(armIndex, targetGuy));
+				StartCoroutine (AfterRandomPauseAimCoroutine (armIndex, targetGuy));
 		}
 		
-       	IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy) {		
+		IEnumerator AfterRandomPauseAimCoroutine (int armIndex, Guy targetGuy)
+		{		
 				yield return new WaitForSeconds (Random.value * 3);
 				if (Random.value > 0.7) {
-					RandomSpeak ();
+						RandomSpeak ();
 				}
-				AimAt(armIndex, targetGuy);
-       	}
+				AimAt (armIndex, targetGuy);
+		}
 		
 		public void AimAtNobody (int armIndex)
 		{
@@ -265,15 +263,15 @@ public class Guy : MonoBehaviour
 
 		void BeScared ()
 		{
-
-				scared = true;
-				if (!chased) {
-						for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
-								AimAtNobody (armIndex);
-						}	
-				}			
-				StartCoroutine (ScreamOhNoCoroutine ());
-
+				if (!scared) {
+						scared = true;
+						if (!chased) {
+								for (int armIndex = 0; armIndex < arms.Count; armIndex++) {
+										AimAtNobody (armIndex);
+								}	
+						}
+						StartCoroutine (ScreamOhNoCoroutine ());
+				}
 		}
 		
 		IEnumerator ScreamOhNoCoroutine ()
@@ -292,14 +290,16 @@ public class Guy : MonoBehaviour
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
 								} else {
-										arm.Shoot (30.0f, specialGuy);
+										arm.Shoot (15.0f, specialGuy);
 								}
 						}
 				}
 		}
 
-		IEnumerator DeathCoroutine ()
-		{
+		IEnumerator DeathCoroutine (Guy specialGuy)
+		{		
+				yield return new WaitForSeconds (REVENGE_TIME);
+				ShootButRememberThatGuyIsSpecial (specialGuy);
 				yield return new WaitForSeconds (AGONY_TIME);
 				gameObject.GetComponentInChildren<Body> ().Hide ();
 				foreach (Arm arm in arms) {
@@ -307,7 +307,8 @@ public class Guy : MonoBehaviour
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
 				dead = true;
-				if (scared) {
+				if (scared) {			
+						yield return new WaitForSeconds (3.0f);
 						Game.LossSequenceCoupDeGrace ();
 				}
 		}
@@ -315,8 +316,7 @@ public class Guy : MonoBehaviour
 		public void Die (Guy specialGuy)
 		{
 				if (IsAlive ()) {			
-						StartCoroutine (DeathCoroutine ());			
-						ShootButRememberThatGuyIsSpecial (specialGuy);
+						StartCoroutine (DeathCoroutine (specialGuy));
 				}
 		}
 		
@@ -362,6 +362,7 @@ public class Guy : MonoBehaviour
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
+				audioPlayer.PlaySound ("Victory");
 				tequilaBalloon.SetActive (true);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
@@ -385,7 +386,8 @@ public class Guy : MonoBehaviour
 				Destroy (this.gameObject);
 		}
 
-		public void ShowPlayButton() {
-			StartCoroutine (ShowPlayButtonCoroutine (5.0f));
+		public void ShowPlayButton ()
+		{
+				StartCoroutine (ShowPlayButtonCoroutine (5.0f));
 		}
 }
