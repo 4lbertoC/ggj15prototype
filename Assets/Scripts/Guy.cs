@@ -34,7 +34,7 @@ public class Guy : MonoBehaviour
 		private readonly float STARTING_TRANSITION_TIME = 0.5f;
 		private readonly Vector3 SAVED_STARTING_POSITION = new Vector3 (-5.5f, 5.47f, 0);
 		private readonly float SAVED_OFFSET = 0.8f;
-		private const float REVENGE_TIME = 0.3f;
+		private const float REVENGE_TIME = 0.2f;
 		private const float AGONY_TIME = 0.2f;
 		private GuyPhase phase = GuyPhase.Ready;
 		private SpriteRenderer spriteRenderer;
@@ -129,6 +129,7 @@ public class Guy : MonoBehaviour
 
 		public void RemoveFromScene ()
 		{
+				audioPlayer.PlaySound ("Escape");
 				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
@@ -177,6 +178,7 @@ public class Guy : MonoBehaviour
 		public void AimAt (int armIndex, Guy targetGuy)
 		{
 				Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
+				audioPlayer.PlaySound ("Caricatore");
 				Arm arm = GetArm (armIndex);
 				if (arm == null) {
 						Debug.Log ("No arm!");
@@ -286,6 +288,7 @@ public class Guy : MonoBehaviour
 		{
 				foreach (Arm arm in arms) {
 						if (arm.target != null) {
+								audioPlayer.PlaySound ("Gun");
 								if (arm.target == specialGuy) {
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
@@ -306,6 +309,7 @@ public class Guy : MonoBehaviour
 						arm.Hide ();
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
+				audioPlayer.PlaySound ("Dead");
 				dead = true;
 				if (scared) {			
 						yield return new WaitForSeconds (3.0f);
