@@ -359,7 +359,15 @@ public class Guy : MonoBehaviour
 		{
 				yield return new WaitForSeconds (2.0f);
 				andNowBalloon.SetActive (true);
-				otherGuy.ShowTequilaMessage (savedGuys);
+                if (otherGuy)
+                {
+                    otherGuy.ShowTequilaMessage(savedGuys);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(5.0f);
+                    GameObject.FindGameObjectWithTag("PlayButton").GetComponent<Restarter>().ToNextLevel();
+                }
 		}
 
 		public void ShowTequilaMessage (List<Guy> savedGuys)
@@ -375,7 +383,7 @@ public class Guy : MonoBehaviour
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
 				}
-				StartCoroutine (ShowPlayButtonCoroutine (2.0f, false));
+				StartCoroutine (ShowPlayButtonCoroutine (60.0f, false));
 		}
 
 		public void ShowVictorious ()
