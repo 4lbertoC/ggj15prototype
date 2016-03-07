@@ -12,13 +12,11 @@ public class Main : MonoBehaviour
 		private Quaternion defaultRotation = Quaternion.Euler (270, 0, 0);
 		private GameState gameState = GameState.GetInstance ();
 
-		void Awake ()
+        private List<Guy> guysToInit = new List<Guy>();
+
+        void Awake ()
 		{
-//				positions.Add (new Vector3 (-5, -2, 0));
-//				positions.Add (new Vector3 (-3, 3, 0));
-//				positions.Add (new Vector3 (5, -2, 0));
-//				positions.Add (new Vector3 (3, 3, 0));
-//				positions.Add (new Vector3 (0, -4, 0));
+        /*
 				positions.Add (new Vector3 (-3.36f, 3.98f, 0.68f));
 				positions.Add (new Vector3 (2.65f, 3.78f, 2.62f));
 				positions.Add (new Vector3 (-6.26f, 0.5f, -0.23f));
@@ -27,8 +25,23 @@ public class Main : MonoBehaviour
 				positions.Add (new Vector3 (-2.52f, -3.06f, -1.785f));
 				positions.Add (new Vector3 (1.25f, -3.2f, -4.3f));
 				positions.Add (new Vector3 (5.26f, -1.69f, -1.06f));
-				
-				AudioPlayer audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
+          */
+
+                positions.Add(new Vector3(-3.36f, 3.98f, 0));
+                positions.Add(new Vector3(2.65f, 3.78f, 0));
+                positions.Add(new Vector3(-6.26f, 0.5f, 0));
+                positions.Add(new Vector3(-0.61f, 0.53f, 0));
+                positions.Add(new Vector3(4.62f, 2.14f, 0));
+                positions.Add(new Vector3(-2.52f, -3.06f, 0));
+                positions.Add(new Vector3(1.25f, -3.2f, 0));
+                positions.Add(new Vector3(5.26f, -1.69f, 0));
+                positions.Add(new Vector3(-7.49f, 3.4f, 0));
+                positions.Add(new Vector3(7.57f, 4.05f, 0));
+                positions.Add(new Vector3(-0.92f, 3.14f, 0));
+                positions.Add(new Vector3(-2.82f, -0.62f, 0));
+                positions.Add(new Vector3(-6.75f, -3.71f, 0));
+
+        AudioPlayer audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 				gameState.SetAudioPlayer (audioPlayer);
 		}
 
@@ -50,20 +63,16 @@ public class Main : MonoBehaviour
 				playButton.Hide ();
 				gameState.Clear ();
 
-				List<Guy> guys = new List<Guy> ();
-
-				for (int i = 0; i < positions.Count; i++) {
-						GameObject guyGO = (GameObject)Instantiate (guyPrefab, positions [i], defaultRotation);
-						Instantiate (housePrefab, positions [i], Quaternion.identity);
-						guyGO.transform.parent = this.transform;
-						Guy guy = guyGO.GetComponent<Guy> ();
-						guys.Add (guy);
-				}
-
-				gameState.Init (guys);
-				SendMessage ("OnGuysUpdate");
-
-		}
+                for (int i = 0; i < positions.Count; i++)
+                {
+                    GameObject guyGO = (GameObject)Instantiate(guyPrefab, positions[i], defaultRotation);
+                    Instantiate(housePrefab, positions[i], Quaternion.identity);
+                    guyGO.transform.parent = this.transform;
+                    Guy guy = guyGO.GetComponent<Guy>();
+                    guysToInit.Add(guy);
+                    guyGO.name = "Guy #" + guy.GetId();
+                }
+        }
 	
 		// Use this for initialization
 		void Start ()
@@ -74,6 +83,29 @@ public class Main : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
+            if (guysToInit.Count > 0)
+            {
+                List<Guy> guys = new List<Guy>();             
+                foreach (Guy guy in guysToInit)
+                {
+                    bool seesSomebody = false;
+                    foreach (Guy otherGuy in guysToInit)
+                    {
+                        if (guy.CanSee(otherGuy)) {
+                            seesSomebody = true;
+                        }    
+                    }
+                    if (!seesSomebody)
+                    {
+                        Debug.LogError(guy.name + " cannot see anybody");
+                        return;
+                    }
+                    guys.Add(guy);
+                }
+                gameState.Init(guys);
+                SendMessage("OnGuysUpdate");
+                guysToInit.Clear();
+            }
 	
 		}
 

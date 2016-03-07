@@ -32,7 +32,10 @@ public class Bullet : MonoBehaviour {
 		if ((transform.position - target.transform.position).magnitude < 0.1f) {
 			// Debug.Log ("Guy #" + target.GetId () + " gets killed");			
 			target.Die(specialGuy);
-			this.gameObject.SetActive(false);
-		}
+            GetComponentInChildren<Renderer>().enabled = false;            
+            Destroy(gameObject, 0.5f);
+            this.enabled = false;
+            //this.gameObject.SetActive(false);
+        }
 	}
 }

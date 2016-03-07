@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameStarter : MonoBehaviour {
 
 	void OnMouseDown() {
 
-		Application.LoadLevel ("DemoScene");
+		SceneManager.LoadScene ("DemoScene");
 
 	}
 }

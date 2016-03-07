@@ -162,7 +162,7 @@ public class GameState
 		public void MakeGuysSpeak ()
 		{
 				foreach (Guy g in currentGuys) {
-						if (!g.Equals (currentPedro) && Random.value > 0.5f) {
+						if (!g.Equals (currentPedro) && Random.value > 0.75f) {
 								g.RandomSpeak ();
 						}
 				}

@@ -165,9 +165,11 @@ public class Guy : MonoBehaviour
 		void OnMouseDown ()
 		{
 				Debug.Log ("Clicked on guy #" + GetId ());
-				if (gameState.IsReady ()) {
-						guyChoiceBalloon.ShowChoice (this);					
-				}
+				if (gameState.IsReady ()) {                    
+                    gameState.ProceedByRunning(this);
+                    GetComponent<Collider>().enabled = false;
+                    // guyChoiceBalloon.ShowChoice (this);					
+                }
 			
 		}
 		
@@ -309,11 +311,11 @@ public class Guy : MonoBehaviour
 						arm.Hide ();
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
+                GetComponent<Collider>().enabled = false;
 				audioPlayer.PlaySound ("Dead");
 				dead = true;
 				if (scared) {			
-						yield return new WaitForSeconds (3.0f);
-						Game.LossSequenceCoupDeGrace ();
+						yield return Game.LossSequenceCoupDeGrace ();
 				}
 		}
 
@@ -387,16 +389,10 @@ public class Guy : MonoBehaviour
 				while (checkDeath && !dead) {			
 						yield return new WaitForSeconds (CHECK_PERIOD);
 				}
-				yield return new WaitForSeconds (seconds);
-				// Check twice to be "sure" that the bullets are not flying or about to fly
-				while (gameState.AreBulletsFlying()) {			
-						yield return new WaitForSeconds (CHECK_PERIOD);
-						while (gameState.AreBulletsFlying()) {
-								yield return new WaitForSeconds (CHECK_PERIOD);
-								Debug.Log ("Bullets are still flying... wait");
-						}
-				}
-				Debug.Log ("Bullets did not fly in the last " + CHECK_PERIOD * 2 + " seconds");
+                // Check twice to be "sure" that the bullets are not flying or about to fly
+                yield return new WaitWhile(gameState.AreBulletsFlying);
+                yield return new WaitForSeconds(seconds);
+                Debug.Log ("Bullets did not fly in the last " + seconds + " seconds");
 				GameObject.FindGameObjectWithTag ("PlayButton").GetComponent<Restarter> ().Show ();
 		}
 
@@ -407,6 +403,18 @@ public class Guy : MonoBehaviour
 
 		public void ShowPlayButtonAfterDeath ()
 		{
-				StartCoroutine (ShowPlayButtonCoroutine (5.0f, true));
+				StartCoroutine (ShowPlayButtonCoroutine (1.5f, true));
 		}
+
+    public bool CanSee (Guy otherGuy)
+    {        
+        Vector3 dir = (otherGuy.GetPosition() - this.GetPosition());
+        RaycastHit[] hits = Physics.RaycastAll(this.GetPosition(), dir, dir.magnitude);
+        if (hits.Length == 1)
+        {
+            return true;
+        }
+        //Debug.Log(this.name + " sees " + hits.Length + " things in direction " + dir);
+        return false;
+    }
 }
