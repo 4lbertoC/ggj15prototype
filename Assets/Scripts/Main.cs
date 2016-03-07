@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour
 {
 
     public static int MIN_GAME_LEVEL = 5;
     public static int MAX_GAME_LEVEL = 13;
-    public static int gameLevel;
+    public static int gameLevel = MIN_GAME_LEVEL;
 
 
     public GameObject guyPrefab;
@@ -44,10 +45,7 @@ public class Main : MonoBehaviour
         positions.Add(new Vector3(7.57f, 4.05f, 0));
         positions.Add(new Vector3(-0.92f, 3.14f, 0));
         positions.Add(new Vector3(-2.82f, -0.62f, 0));
-        positions.Add(new Vector3(-6.75f, -3.71f, 0));
-
-        AudioPlayer audioPlayer = GameObject.FindGameObjectWithTag("AudioController").GetComponent<AudioPlayer>();
-        gameState.SetAudioPlayer(audioPlayer);
+        positions.Add(new Vector3(-6.75f, -3.71f, 0));        
     }
 
     private void PrintCombinations(Dictionary<Guy, List<Guy>> allTargets)
@@ -78,7 +76,12 @@ public class Main : MonoBehaviour
     public void Play(int level)
     {
         Main.gameLevel = level;
+        SceneManager.LoadScene("Interval");
+    }
 
+
+    void Start()
+    {
         playButton.Hide();
         gameState.Clear();
 
@@ -97,12 +100,6 @@ public class Main : MonoBehaviour
             guysToInit.Add(guy);
             guyGO.name = "Guy #" + guy.GetId();
         }
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-        Restart();
     }
 
     // Update is called once per frame

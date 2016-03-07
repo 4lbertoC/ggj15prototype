@@ -6,7 +6,7 @@ public class GameStarter : MonoBehaviour {
 
 	void OnMouseDown() {
 
-		SceneManager.LoadScene ("DemoScene");
+		SceneManager.LoadScene ("Interval");
 
 	}
 }

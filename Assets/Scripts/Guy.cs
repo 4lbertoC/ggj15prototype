@@ -41,7 +41,6 @@ public class Guy : MonoBehaviour
 		public GuyChoiceButton guyChoiceBalloon;
 		public GameObject andNowBalloon;
 		public GameObject tequilaBalloon;
-		private AudioPlayer audioPlayer;
 		public List<Sprite> balloonSprites;
 		public Sprite balloonOh;
 		public Sprite balloonNoo;
@@ -73,7 +72,6 @@ public class Guy : MonoBehaviour
 				
 				// Debug.Log ("Guy #" + guyId + " was awaken");
 				spriteRenderer = GetComponentInChildren<SpriteRenderer> ();
-				audioPlayer = GameObject.FindGameObjectWithTag ("AudioController").GetComponent<AudioPlayer> ();
 		}
 
 		// Use this for initialization
@@ -152,7 +150,7 @@ public class Guy : MonoBehaviour
 
 		public void RemoveFromScene ()
 		{
-				audioPlayer.PlaySound ("Escape");
+                AudioPlayer.GetInstance().PlaySound ("Escape");
 				phase = GuyPhase.Saved;
 				transitionTime = STARTING_TRANSITION_TIME;
 				AimAtNobody (0);
@@ -184,8 +182,8 @@ public class Guy : MonoBehaviour
 				if (!phase.Equals (GuyPhase.Ready)) {
 						return;
 				}
-				// Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
-				audioPlayer.PlaySound ("Caricatore");
+                // Debug.Log ("Arm #" + armIndex + " of guy #" + GetId () + " aiming @ " + targetGuy.GetId ());
+                AudioPlayer.GetInstance().PlaySound ("Caricatore");
 				Arm arm = GetArm (armIndex);
 				if (arm == null) {
 						Debug.Log ("No arm!");
@@ -240,7 +238,7 @@ public class Guy : MonoBehaviour
 				balloon.SetActive (true);
 				balloon.GetComponent<SpriteRenderer> ().sprite = sentence;
 				framesBeforeShuttingUp = 90;
-				audioPlayer.PlaySound ("Voice");
+                AudioPlayer.GetInstance().PlaySound ("Voice");
 		}
 		
 		public void RandomSpeak ()
@@ -250,7 +248,7 @@ public class Guy : MonoBehaviour
 				// Debug.Log ("Random speak " + random);
 				balloon.GetComponent<SpriteRenderer> ().sprite = balloonSprites [random];
 				framesBeforeShuttingUp = 90;
-				audioPlayer.PlaySound ("Voice");
+                AudioPlayer.GetInstance().PlaySound ("Voice");
 		}
 	
 		public void ShutUp ()
@@ -288,10 +286,10 @@ public class Guy : MonoBehaviour
 		
 		public void ShootButRememberThatGuyIsSpecial (Guy specialGuy)
 		{
-				Debug.Log ("Guy #" + GetId () + " about to shoot");
+				//Debug.Log ("Guy #" + GetId () + " about to shoot");
 				foreach (Arm arm in arms) {
 						if (arm.target != null) {
-								audioPlayer.PlaySound ("Gun");
+                                AudioPlayer.GetInstance().PlaySound ("Gun");
 								if (arm.target == specialGuy) {
 										arm.Shoot (2.0f, null);				
 										specialGuy.BeScared ();
@@ -299,8 +297,8 @@ public class Guy : MonoBehaviour
 										arm.ShootWithDelay (15.0f, specialGuy);
 								}
 						}
-				}
-		}
+				}                
+    }
 
 		IEnumerator DeathCoroutine (Guy specialGuy)
 		{		
@@ -311,8 +309,7 @@ public class Guy : MonoBehaviour
 						arm.Hide ();
 				}
 				gameObject.GetComponentInChildren<Corpse> ().Show ();
-                GetComponent<Collider>().enabled = false;
-				audioPlayer.PlaySound ("Dead");
+                AudioPlayer.GetInstance().PlaySound ("Dead");
 				dead = true;
 				if (scared) {			
 						yield return Game.LossSequenceCoupDeGrace ();
@@ -378,7 +375,7 @@ public class Guy : MonoBehaviour
 		IEnumerator ShowTequilaMessageCoroutine (List<Guy> savedGuys)
 		{
 				yield return new WaitForSeconds (2.0f);
-				audioPlayer.PlaySound ("Victory");
+                AudioPlayer.GetInstance().PlaySound ("Victory");
 				tequilaBalloon.SetActive (true);
 				foreach (Guy g in savedGuys) {
 						g.ShowVictorious ();
