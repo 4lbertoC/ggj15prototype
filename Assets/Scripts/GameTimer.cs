@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameTimer : MonoBehaviour
 {
-		public GUIText timerText;
+		public Text timerText;
 		private float deadline;
 		private bool isEnded = false;
 		private GameState gameState = GameState.GetInstance ();
